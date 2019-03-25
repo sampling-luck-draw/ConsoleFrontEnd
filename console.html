@@ -3,89 +3,63 @@
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="assets/css/materialize.min.css"/>
+    <link type="text/css" href="assets/css/materialdesignicons.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="assets/css/console.css"/>
     <title>三百两抽奖系统控制台</title>
 </head>
 <body>
-
-<div class="container">
-    <div class="row">
-        <div class="valign-wrapper">    
-            <div class="col m8">
-                <h3><a href="index">抽奖系统控制台</a></h3>
-            </div>
-            <div class="col m2">
-                <label>
-                    <input type="text" value="127.0.0.1:8000/screen"/>
-                </label>
-            </div>
-            <a class="waves-effect waves-light btn valign col m1 group-btn" href="screen" target="blank">打开屏幕</a>
-            <a class="waves-effect waves-light btn valign col m1 group-btn">复制链接</a>
+    <header id="header" class="page-topbar">
+        <div class="navbar-fixed">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <ul class="left">                     
+                        <li><h1 class="logo-wrapper"><a href="index.html" class="brand-logo darken-1">
+                            <span class="logo-text">Materialize</span></a></h1></li>
+                    </ul>
+                    <ul class="right hide-on-med-and-down">
+                        <li>
+                            <div class="btn-start-draw">
+                                <a><i id="start-draw" class="mdi mdi-arrow-right-drop-circle-outline"></i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </div>
-    </div>
-
-    <hr/>
-
-    <div class="row">
-        <div class="valign-wrapper">
-            <div class="col m4">
-                <select id="award-select">
-                    <option value="" disabled selected>请选择奖项</option>
-                    <option value="1">白菜</option>
-                    <option value="2">青菜</option>
-                    <option value="3">萝卜</option>
-                    <option value="3">土豆</option>
-                </select>
-                <label for="award-select"></label>
-            </div>
-            <div class="col m2">
-                <a class="waves-effect waves-light btn-large valign" id="pick-btn">抽！</a>
-            </div>
-            <div class="vhr" style="height: 100px;"></div>
-            <div class="col m6">
-                <table>
-                    <tr>
-                        <td>
-                            <a class="waves-effect waves-light btn" id="reset-btn">复位</a>
-                        </td>
-                    </tr>
-                </table>
-                <!--<a class="waves-effect waves-light btn valign"> 设置背景</a>-->
-            </div>
-        </div>
-    </div>
-
-    <hr />
-
-    <div class="row">
-        <div class="col m4">
-            <h5>奖品奖项</h5>
-            <ul class="collection" id="award-list">
-                <li class="collection-item">白菜</li>
-                <li class="collection-item">青菜</li>
-                <li class="collection-item">萝卜</li>
-                <li class="collection-item">土豆</li>
+    </header>
+    <nav id="horizontal-nav" class="white hide-on-med-and-down">
+        <div class="nav-wrapper">                  
+            <ul id="ul-horizontal-nav" class="left hide-on-med-and-down">
+                <li>
+                    <a href="console.html" class="nav-btn cyan-text">
+                        <i class="mdi mdi-view-dashboard"></i>
+                        <span>基本信息</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="console.html" class="nav-btn cyan-text">
+                        <i class="mdi mdi-shape-outline"></i>
+                        <span>方式主题</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="console.html" class="nav-btn cyan-text">
+                        <i class="mdi mdi-chart-bar"></i>
+                        <span>查询统计</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="console.html" class="nav-btn cyan-text">
+                        <i class="mdi mdi-comment-multiple-outline"></i>
+                        <span>弹幕设置</span>
+                    </a>
+                </li>
             </ul>
         </div>
-
-        <div class="col m4">
-            <h5>参与用户</h5>
-            <ul class="collection" id="user-list">
-
-            </ul>
-        </div>
-
-        <div class="col m4">
-            <h5>中奖用户</h5>
-            <ul class="collection" id="won-list">
-
-            </ul>
-        </div>
-    </div>
-</div>
+    </nav>
 </body>
 
 </html>
 <script type="text/javascript" src="assets/js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="assets/js/materialize.min.js"></script>
-<script type="text/javascript" src="assets/js/console.js"></script>
+<!-- <script type="text/javascript" src="assets/js/console.js"></script> -->
