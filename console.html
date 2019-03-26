@@ -8,58 +8,77 @@
     <title>三百两抽奖系统控制台</title>
 </head>
 <body>
-    <header id="header" class="page-topbar">
-        <div class="navbar-fixed">
-            <nav class="navbar-color">
-                <div class="nav-wrapper">
-                    <ul class="left">                     
-                        <li><h1 class="logo-wrapper"><a href="index.html" class="brand-logo darken-1">
-                            <span class="logo-text">Materialize</span></a></h1></li>
-                    </ul>
-                    <ul class="right hide-on-med-and-down">
-                        <li>
-                            <div class="btn-start-draw">
-                                <a><i id="start-draw" class="mdi mdi-arrow-right-drop-circle-outline"></i></a>
+    <div class="header">
+        <nav class="nav-extended" style="background-color: #1B7690;">
+            <div class="nav-wrapper" style="height: 60px;">
+                <a href="#" class="brand-logo" style="padding-left: 20px;">SAMPLING</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><div class="">
+                        <label id="draw-label">抽！</label>
+                    </div></li>
+                    <li><div class="btn-draw-action">
+                        <a><i id="draw-action" class="mdi mdi-arrow-right-drop-circle-outline"></i></a>
+                    </div></li>
+                </ul>
+            </div>
+            <div class="nav-content">
+                <ul class="tabs tabs-transparent">
+                    <li class="tab"><a class="active" href="#basic-info">基本信息</a></li>
+                    <li class="tab"><a href="#test2">方式主题</a></li>
+                    <li class="tab"><a href="#test3">查询统计</a></li>
+                    <li class="tab"><a href="#test4">弹幕设置</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        <div id="basic-info" class="col s12">
+            <div class="row">
+                <div class="card-panel col s6" style="margin-left: 20px;">
+                    <div class="row">
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="name" type="text">
+                                    <label for="first_name" class="">活动名称</label>
+                                </div>
                             </div>
-                        </li>
-                    </ul>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input id="email" type="email">
+                                    <label for="email" class="">活动开始时间</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="email" type="email">
+                                    <label for="email" class="">活动结束时间</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="password" type="password">
+                                    <label for="password" class="">Password</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </nav>
+            </div>
         </div>
-    </header>
-    <nav id="horizontal-nav" class="white hide-on-med-and-down">
-        <div class="nav-wrapper">                  
-            <ul id="ul-horizontal-nav" class="left hide-on-med-and-down">
-                <li>
-                    <a href="console.html" class="nav-btn cyan-text">
-                        <i class="mdi mdi-view-dashboard"></i>
-                        <span>基本信息</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="console.html" class="nav-btn cyan-text">
-                        <i class="mdi mdi-shape-outline"></i>
-                        <span>方式主题</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="console.html" class="nav-btn cyan-text">
-                        <i class="mdi mdi-chart-bar"></i>
-                        <span>查询统计</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="console.html" class="nav-btn cyan-text">
-                        <i class="mdi mdi-comment-multiple-outline"></i>
-                        <span>弹幕设置</span>
-                    </a>
-                </li>
-            </ul>
+        <div id="test2" class="col s12">Test 2</div>
+        <div id="test3" class="col s12">Test 3</div>
+        <div id="test4" class="col s12">Test 4</div>
+    </div>
+    <footer class="page-footer" style="padding-top: 0px; background-color: #00bcd4;">
+        <div class="footer-copyright">
+            <div class="container">
+                © 2014 Copyright LWC2
+                <a class="grey-text text-lighten-4 right" href="#!">Visit Sampling Homepage</a>
+            </div>
         </div>
-    </nav>
+    </footer>
 </body>
-
 </html>
 <script type="text/javascript" src="assets/js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="assets/js/materialize.min.js"></script>
-<!-- <script type="text/javascript" src="assets/js/console.js"></script> -->
+<script type="text/javascript" src="assets/js/console.js"></script>

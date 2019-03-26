@@ -1,47 +1,30 @@
+html {
+    height: 100%;
+}
 body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+
     color: rgb(64, 77, 91);
     font-weight: 500;
     font-size: 1.05em;
     font-family: "Microsoft YaHei", 宋体, "Segoe UI", 
     "Lucida Grande", Helvetica, Arial, sans-serif, FreeSans, Arimo;
 }
-
-h1 {
-    font-size: 2em;
-}
-
-.logo-wrapper {
-    margin: 0px;
-}
-
-.navbar-color {
+.nav-content {
     background-color: #00bcd4;
 }
-
-header .brand-logo {
-    margin: 1px 0;
-    padding: 14px 20px;
+#draw-action {
+    font-size: 30px;
 }
-
-.logo-text {
+#draw-label {
     color: white;
-    font-family: Roboto, sans-serif;
-    font-size: 30px;
-    font-weight: 400;
-    line-height: 33px;
-    list-style-type: none;
-    text-align: left;
-    text-size-adjust: 100%;
+    font-size: 20px;
 }
-
-#start-draw {
-    font-size: 30px;
+.main {
+    flex: 1;
 }
-
-.cyan-text {
-    color: #00bcd4 !important;
-}
-
-.nav-btn i {
-    display: inline-block;
+.card-panel {
+    margin-top: 20px;
 }
