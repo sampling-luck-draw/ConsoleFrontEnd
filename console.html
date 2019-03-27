@@ -1,4 +1,4 @@
-<html lang="zh">
+﻿<html lang="zh">
 
 <head>
     <meta charset="UTF-8"/>
@@ -10,35 +10,80 @@
 <body>
     <div class="header">
         <nav class="nav-extended" style="background-color: #1B7690;">
-            <div class="nav-wrapper" style="height: 60px;">
-                <a href="#" class="brand-logo" style="padding-left: 20px;">SAMPLING</a>
-                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><div class="">
-                        <label id="draw-label">抽！</label>
-                    </div></li>
-                    <li><div class="btn-draw-action">
-                        <a><i id="draw-action" class="mdi mdi-arrow-right-drop-circle-outline"></i></a>
-                    </div></li>
+            <div class="nav-wrapper" style="height: 63px;">
+                <a class="brand-logo" style="padding-left: 20px;">SAMPLING</a>
+                <ul class="right hide-on-med-and-down">
+                    
                 </ul>
             </div>
             <div class="nav-content">
-                <ul class="tabs tabs-transparent">
-                    <li class="tab"><a class="active" href="#basic-info">基本信息</a></li>
-                    <li class="tab"><a href="#test2">方式主题</a></li>
-                    <li class="tab"><a href="#test3">查询统计</a></li>
-                    <li class="tab"><a href="#test4">弹幕设置</a></li>
-                </ul>
+                <div class="row" style="margin-bottom: 10px;">
+                <div class="col s4" style="width: 30%; margin-left: 20px; margin-right: 20px; padding-left: 0px;">
+                    <ul class="tabs tabs-transparent">
+                        <li class="tab"><a>抽奖页面实时监控</a></li>
+                    </ul>
+                </div>
+                <div class="col s8" style="padding-left: 0px;">
+                    <ul class="tabs tabs-transparent">
+                        <li class="tab"><a class="active" href="#basic-info">基本信息</a></li>
+                        <li class="tab"><a href="#test2">方式主题</a></li>
+                        <li class="tab"><a href="#test3">查询统计</a></li>
+                        <li class="tab"><a href="#test4">弹幕设置</a></li>
+                    </ul>
+                </div>
+                </div>
             </div>
         </nav>
     </div>
-    <div class="main">
-        <div id="basic-info" class="col s12">
-            <div class="row">
-                <div class="card-panel col s6" style="margin-left: 20px;">
-                    <div class="row">
-                        <form class="col s12">
-                            <div class="row">
+    <div class="row main" style="margin: 0px;">
+        <div class="card-panel col s4" style="width: 30%; margin-left: 20px; padding: 0px;">
+            <div style="height: 74%;">
+                <video controls="controls" id="video" preload="auto" width="100%;" style="margin-top: 0%">
+                    <source src="" type="video/mp4">
+                </video>
+                <div class="global-control">
+                    <a class="waves-effect waves-light btn btn-activity-action">
+                        <i id="activity-action" class="mdi mdi-arrow-right-drop-circle-outline right"></i>
+                        <label id="activity-label">
+                            开始活动
+                        </label>
+                    </a>
+                    <a class="waves-effect waves-light btn btn-draw-action disabled">
+                        <i id="draw-action" class="mdi mdi-arrow-right-drop-circle-outline right"></i>
+                        <label id="draw-label">
+                            开始抽奖
+                        </label>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-panel col s8" id="setting-panel" style="width: 66%; margin-left: 20px; height: 74%; overflow: scroll;">
+            <div id="basic-info">
+                <div class="row">
+                    <form class="col s12" style="margin-top: 20px;">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="name" type="text">
+                                <label for="first_name" class="">活动名称</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="email" type="email">
+                                <label for="email" class="">活动开始时间</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="email" type="email">
+                                <label for="email" class="">活动结束时间</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="password" type="password">
+                                <label for="password" class="">Password</label>
+                            </div>
+                        </div>
+                        <div class="row">
                                 <div class="input-field col s12">
                                     <input id="name" type="text">
                                     <label for="first_name" class="">活动名称</label>
@@ -60,16 +105,15 @@
                                     <label for="password" class="">Password</label>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                    </form>
                 </div>
             </div>
+            <div id="test2" class="col s12">Test 2</div>
+            <div id="test3" class="col s12">Test 3</div>
+            <div id="test4" class="col s12">Test 4</div>
         </div>
-        <div id="test2" class="col s12">Test 2</div>
-        <div id="test3" class="col s12">Test 3</div>
-        <div id="test4" class="col s12">Test 4</div>
     </div>
-    <footer class="page-footer" style="padding-top: 0px; background-color: #00bcd4;">
+    <footer class="page-footer" style="padding-top: 0px; background-color: #1B7690; margin-top: 0px;">
         <div class="footer-copyright">
             <div class="container">
                 © 2014 Copyright LWC2

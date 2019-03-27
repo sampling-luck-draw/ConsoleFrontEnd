@@ -1,17 +1,17 @@
-let ws = new WebSocket('ws://localhost:1923');
-ws.onopen = function() {
-    console.log("open");
-    ws.send("hello");
-};
-ws.onmessage = function(evt) {
-  console.log(evt.data)
-};
-ws.onclose = function(evt) {
-  console.log("WebSocketClosed!");
-};
-ws.onerror = function(evt) {
-  console.log("WebSocketError!");
-};
+// let ws = new WebSocket('ws://localhost:1923');
+// ws.onopen = function() {
+//     console.log("open");
+//     ws.send("hello");
+// };
+// ws.onmessage = function(evt) {
+//   console.log(evt.data)
+// };
+// ws.onclose = function(evt) {
+//   console.log("WebSocketClosed!");
+// };
+// ws.onerror = function(evt) {
+//   console.log("WebSocketError!");
+// };
 
 // ws.onmessage = function (message) {
 //     console.log(message.data);
@@ -25,23 +25,41 @@ ws.onerror = function(evt) {
 //     // }
 // };
 
+let drawing = false;
 let running = false;
 
+function start_draw() {
+    $("#draw-label").text("停止抽奖");
+    $(".btn-draw-action").css("background-color", "orangered");
+    $("#draw-action").attr("class", "mdi mdi-stop-circle-outline right");
+}
+
+function stop_draw() {
+    $("#draw-label").text("开始抽奖");
+    $(".btn-draw-action").css("background-color", "forestgreen");
+    $("#draw-action").attr("class", "mdi mdi-arrow-right-drop-circle-outline right");
+}
+
 function on_draw_btn_click() {
+    if (!drawing) start_draw(); else stop_draw();
+    drawing = !drawing;
+}
+
+function on_activity_btn_click() {
     if (!running) {
-        $("#draw-label").text("停！");
-        $("#draw-action").attr("class", "mdi mdi-stop-circle-outline");
-        // ws.send(JSON.stringify({
-        //     action: 'start-drawing'
-        // }));
+        $("#activity-label").text("结束活动");
+        $(".btn-activity-action").css("background-color", "orangered");
+        $("#activity-action").attr("class", "mdi mdi-stop-circle-outline right");
+        $(".btn-draw-action").removeClass("disabled");
     } else {
-        $("#draw-label").text("抽！");
-        $("#draw-action").attr("class", "mdi mdi-arrow-right-drop-circle-outline");
-        // ws.send(JSON.stringify({
-        //     action: 'stop-drawing'
-        // }));
+        $("#activity-label").text("活动结束");
+        $(".btn-activity-action").css("background-color", "forestgreen");
+        $("#activity-action").attr("class", "mdi mdi-arrow-right-drop-circle-outline right");
+        $(".btn-activity-action").addClass("disabled");
+        $(".btn-draw-action").addClass("disabled");
+        stop_draw();
     }
-    running = !running;
+    running = true;
 }
 
 // function on_reset_button_click() {
@@ -80,5 +98,6 @@ $(document).ready(function () {
     // $('select').material_select();
     // get_participant_list();
     $(".btn-draw-action").click(on_draw_btn_click);
+    $(".btn-activity-action").click(on_activity_btn_click);
     // $("#reset-btn").click(on_reset_button_click);
 });

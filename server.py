@@ -27,8 +27,8 @@ def handle_message(message):
 @socketio.on('connect')
 def connect_handler():
     emit('my response',
-            {'message': '{0} has joined'.format(current_user.name)},
-            broadcast=True)
+	    {'message': '{0} has joined'.format(current_user.name)},
+	    broadcast=True)
 
 if __name__ == '__main__':
     app.run(port=1923, debug=True)
