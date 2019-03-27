@@ -93,11 +93,71 @@ function on_activity_btn_click() {
 //         }
 //     })
 // }
+$.extend({
+    csv: function (record, f) {
+        record = record.split(/\n/);
+        var title = record[0].split(",");
+        record.shift();
+        var data = [];
+        for (var y = 0; y < title.length; y++) {
+            title[y] = title[y].trim();
+        }
+        for (var i = 0; i < record.length; i++) {
+            var t = record[i].split(",");
+            for (var y = 0; y < t.length; y++) {
+                if (!data[i]) data[i] = {};
+                data[i][title[y]] = t[y];
+            }
+        }
+        f.call(this, data);
+        data = null;
+    }
+});
+function import_participants() {
+    var file = document.getElementById("participants").files[0];
+    var fileName = file.name.substring(0, file.name.lastIndexOf('.'));
+    var reader = new FileReader();
+    reader.onload = function(f) {
+        $('#parts').val($('#participants').val());
+        $('.parts-label').addClass("active");
+        var data = this.result;
+        $(function() {
+            $.csv(data, function(data) {
+                if (!data) return;
+                if (data && !data[0].hasOwnProperty('username')) {
+                    for (var item in data[0]) console.log(item);
+                    return;
+                }
+                var head_str = "<tr>";
+                for (item in data[0])
+                    head_str += "<th>" + item + "</th>";
+                $("#parts-list-head").append(head_str + "</tr>");
+                for (var i = 0; i < data.length; ++i) {
+                    var record_str = "<tr>";
+                    for (item in data[0])
+                        record_str += "<td>" + data[i][item] + "</td>"
+                    $("#parts-list-body").append(record_str + "</tr>");
+                }
+            });
+        });
+    };
+    reader.readAsText(file);
+}
+
+var eCalendar = {
+    type  : "time",   //模式，time: 带时间选择; date: 不带时间选择;
+    stamp : false,   //是否转成时间戳，默认true;
+    offset: [0, 2],   //弹框手动偏移量;
+    format: "yyyy年mm月dd日 hh:ii",   //时间格式 默认 yyyy-mm-dd hh:ii;
+    skin  : "#1B7690",   //皮肤颜色，默认随机，可选值：0-8,或者直接标注颜色值;
+    step  : 10,   //选择时间分钟的精确度;
+    callback:function(v,e) {} //回调函数
+};
 
 $(document).ready(function () {
-    // $('select').material_select();
-    // get_participant_list();
     $(".btn-draw-action").click(on_draw_btn_click);
     $(".btn-activity-action").click(on_activity_btn_click);
-    // $("#reset-btn").click(on_reset_button_click);
+    $("#participants").change(import_participants);
+    $("#start-time").ECalendar(eCalendar);
+    $("#end-time").ECalendar(eCalendar);
 });

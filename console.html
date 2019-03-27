@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="assets/css/materialize.min.css"/>
     <link type="text/css" href="assets/css/materialdesignicons.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="assets/css/console.css"/>
+    <link rel="stylesheet" href="assets/css/ECalendar_date_style.css"/>
     <title>三百两抽奖系统控制台</title>
 </head>
 <body>
@@ -57,55 +58,47 @@
                 </div>
             </div>
         </div>
-        <div class="card-panel col s8" id="setting-panel" style="width: 66%; margin-left: 20px; height: 74%; overflow: scroll;">
+        <div class="card-panel col s8" id="setting-panel" style="width: 66%; margin-left: 20px; height: 74%; overflow-y: auto;">
             <div id="basic-info">
-                <div class="row">
-                    <form class="col s12" style="margin-top: 20px;">
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <input id="name" type="text">
-                                <label for="first_name" class="">活动名称</label>
-                            </div>
-                        </div>
+                <div class="row" style="margin-bottom: 0px;">
+                    <form class="col s12" style="margin-top: 20px; margin-bottom: 0px;">
                         <div class="row">
                             <div class="input-field col s6">
-                                <input id="email" type="email">
-                                <label for="email" class="">活动开始时间</label>
+                                <input id="activity-name" type="text" autocomplete="off">
+                                <label for="activity-name" class="">活动名称</label>
                             </div>
                             <div class="input-field col s6">
-                                <input id="email" type="email">
-                                <label for="email" class="">活动结束时间</label>
+                                <div class="row">
+                                    <div class="input-field col s8" style="margin: 0px; padding: 0px;">
+                                        <input id="parts" type="text" autocomplete="off" onclick="$('#participants').click();">
+                                        <label for="parts" class="parts-label" style="left: 0px;">参与用户信息</label>
+                                    </div>
+                                    <div class="col s4" style="margin: 0px; padding: 0px;">
+                                        <a class="btn waves-effect waves-light import-participants" onclick="$('#participants').click();">导入文件</a>
+                                    </div>
+                                </div>
+                                <input type="file" id='participants'  accept=".csv" style="display: none">
+                            </div>
+                            <div class="input-field col s6">
+                                <label for="start-time" class="active">活动开始时间</label>
+                                <div class="calendarWarp">
+                                    <input type="text" class='ECalendar' id="start-time"/>
+                                </div>
+                            </div>
+                            <div class="input-field col s6">
+                                <label for="end-time" class="active">活动结束时间</label>
+                                <div class="calendarWarp">
+                                    <input type="text" class='ECalendar' id="end-time"/>
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <input id="password" type="password">
-                                <label for="password" class="">Password</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                                <div class="input-field col s12">
-                                    <input id="name" type="text">
-                                    <label for="first_name" class="">活动名称</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s6">
-                                    <input id="email" type="email">
-                                    <label for="email" class="">活动开始时间</label>
-                                </div>
-                                <div class="input-field col s6">
-                                    <input id="email" type="email">
-                                    <label for="email" class="">活动结束时间</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input id="password" type="password">
-                                    <label for="password" class="">Password</label>
-                                </div>
-                            </div>
                     </form>
+                </div>
+                <div class="parts-list">
+                    <table class="responsive-table display striped" cellspacing="0">
+                        <thead id="parts-list-head"></thead>
+                        <tbody id="parts-list-body"></tbody>
+                    </table>
                 </div>
             </div>
             <div id="test2" class="col s12">Test 2</div>
@@ -125,4 +118,5 @@
 </html>
 <script type="text/javascript" src="assets/js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="assets/js/materialize.min.js"></script>
+<script type="text/javascript" src="assets/js/Ecalendar.jquery.min.js"></script>
 <script type="text/javascript" src="assets/js/console.js"></script>
