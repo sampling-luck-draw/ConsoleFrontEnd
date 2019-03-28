@@ -127,7 +127,10 @@ div.prize-list td, div.item-list td {
 .minicolors {
     width: 100% !important;
     padding-right: 30px;
-    padding-top: 25px;
+    padding-top: 15px;
+}
+input.minicolors {
+    padding-bottom: 10px;
 }
 .minicolors-swatch {
     top: 15px !important;
