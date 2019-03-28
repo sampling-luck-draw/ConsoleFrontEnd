@@ -17,7 +17,7 @@ body {
 }
 .btn-draw-action, .btn-activity-action {
     background-color: forestgreen;
-    margin-left: 4.5%;
+    /* margin-left: 4.5%; */
 }
 #draw-action, #activity-action {
     font-size: 26px;
@@ -28,6 +28,10 @@ body {
 }
 .main {
     flex: 1;
+}
+#setting-panel {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 #setting-panel::-webkit-scrollbar {
     width: 10px;
@@ -44,6 +48,8 @@ body {
 }
 .global-control {
     margin-top: 10px;
+    padding-left: 2%;
+    padding-right: 2%;
 }
 .import-participants {
     padding-left: 25px;
@@ -54,23 +60,75 @@ body {
 .parts-list {
     margin-left: 20px;
     margin-right: 20px;
-    height: 55%;
+    height: 61%;
     border: 1px solid rgb(158, 158, 158);
     overflow-y: auto;
 }
-.parts-list::-webkit-scrollbar {
+.lucky-list::-webkit-scrollbar, .parts-list::-webkit-scrollbar {
     width: 10px;
     height: 0px;
 }
-.parts-list::-webkit-scrollbar-thumb {
+.lucky-list::-webkit-scrollbar-thumb, .parts-list::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: #1B7690;
     background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
 }
-.parts-list::-webkit-scrollbar-track {
+.lucky-list::-webkit-scrollbar-track, .parts-list::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     background: #EDEDED;
 }
 .calendarWarp {
     width: 100%;
+}
+
+.lucky-list {
+    height: 40%;
+    border: 1px solid rgb(158, 158, 158);
+    overflow-y: auto;
+}
+.prize-list, .item-list {
+    height: 71%;
+    border: 1px solid rgb(158, 158, 158);
+    overflow-y: auto;
+}
+.prize-list::-webkit-scrollbar, .item-list::-webkit-scrollbar {
+    width: 0 !important 
+}
+.del-prize, .del-item {
+    padding-top: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 20px;
+}
+.del-prize:hover, .del-item:hover {
+    color: #00bcd4;
+}
+div.prize-list td, div.item-list td {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+.cur-item {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+.table-header {
+    margin-bottom: -20px !important;
+    background-color: #00bcd4;
+    color: white;
+    padding-left: 17px !important;
+}
+.table-adder {
+    padding-right: 0px;
+    margin-bottom: -20px;
+}
+.toast {
+    background-color: red;
+}
+.minicolors {
+    width: 100% !important;
+    padding-right: 30px;
+    padding-top: 25px;
+}
+.minicolors-swatch {
+    top: 15px !important;
 }
