@@ -81,7 +81,13 @@ body {
     width: 100%;
 }
 
+/* .global-control {
+    flex-flow: column;
+    display:flex;
+} */
+
 .lucky-list {
+    /* flex: 3; */
     height: 40%;
     border: 1px solid rgb(158, 158, 158);
     overflow-y: auto;
@@ -134,4 +140,7 @@ input.minicolors {
 }
 .minicolors-swatch {
     top: 15px !important;
+}
+#setting-panel, #left-panel {
+    height: 80% !important;
 }
