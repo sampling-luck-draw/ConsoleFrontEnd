@@ -2,8 +2,9 @@
     height: 100%;
 }
 body {
-    min-height: 100%;
+    height: 100%;
     display: flex;
+    align-items: stretch;
     flex-direction: column;
     background-color: cadetblue;
     color: rgb(64, 77, 91);
@@ -12,135 +13,58 @@ body {
     font-family: "Microsoft YaHei", 宋体, "Segoe UI", 
     "Lucida Grande", Helvetica, Arial, sans-serif, FreeSans, Arimo;
 }
-.nav-content {
-    background-color: #00bcd4;
+.nav-link{
+    color: rgba(255, 255, 255, 0.7) !important;
+    border-radius: 0px !important;
+    position: relative;
+    text-decoration: none;
 }
-.btn-draw-action, .btn-activity-action {
-    background-color: forestgreen;
-    /* margin-left: 4.5%; */
+.nav-link:before{
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    background: #ffffff;
+    transition: all .3s;
 }
-#draw-action, #activity-action {
-    font-size: 26px;
+.nav-link:hover {
+    color: rgba(255, 255, 255, 1) !important;
 }
-#draw-label, #activity-label {
-    color: white;
-    font-size: 20px;
+.nav-link.active:before{
+    width: 100%;
+    left: 0;
+    right: 0;
+}
+.nav-link.active {
+    color: rgba(255, 255, 255, 1) !important;
+    background-color: rgba(255, 255, 255, 0) !important;
 }
 .main {
-    flex: 1;
-}
-#setting-panel {
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-}
-#setting-panel::-webkit-scrollbar {
-    width: 10px;
-    height: 0px;
-}
-#setting-panel::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: #1B7690;
-    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-}
-#setting-panel::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    background: #EDEDED;
-}
-.global-control {
-    margin-top: 10px;
-    padding-left: 2%;
-    padding-right: 2%;
-}
-.import-participants {
-    padding-left: 25px;
-    padding-right: 25px;
-    margin-left: 20px;
-    margin-top: 10px;
-}
-.parts-list {
-    margin-left: 20px;
-    margin-right: 20px;
-    height: 61%;
-    border: 1px solid rgb(158, 158, 158);
-    overflow-y: auto;
-}
-.lucky-list::-webkit-scrollbar, .parts-list::-webkit-scrollbar {
-    width: 10px;
-    height: 0px;
-}
-.lucky-list::-webkit-scrollbar-thumb, .parts-list::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: #1B7690;
-    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-}
-.lucky-list::-webkit-scrollbar-track, .parts-list::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    background: #EDEDED;
-}
-.calendarWarp {
+    flex: 1 1 auto; 
+    overflow: auto;
+    height: 100%;
     width: 100%;
-}
-
-/* .global-control {
-    flex-flow: column;
-    display:flex;
-} */
-
-.lucky-list {
-    /* flex: 3; */
-    height: 40%;
-    border: 1px solid rgb(158, 158, 158);
-    overflow-y: auto;
-}
-.prize-list, .item-list {
-    height: 71%;
-    border: 1px solid rgb(158, 158, 158);
-    overflow-y: auto;
-}
-.prize-list::-webkit-scrollbar, .item-list::-webkit-scrollbar {
-    width: 0 !important 
-}
-.del-prize, .del-item {
-    padding-top: 30px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 20px;
-}
-.del-prize:hover, .del-item:hover {
-    color: #00bcd4;
-}
-div.prize-list td, div.item-list td {
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
-}
-.cur-item {
-    margin-top: 10px !important;
-    margin-bottom: 10px !important;
-}
-.table-header {
-    margin-bottom: -20px !important;
-    background-color: #00bcd4;
-    color: white;
-    padding-left: 17px !important;
-}
-.table-adder {
-    padding-right: 0px;
-    margin-bottom: -20px;
-}
-.toast {
-    background-color: red;
-}
-.minicolors {
-    width: 100% !important;
-    padding-right: 30px;
     padding-top: 15px;
 }
-input.minicolors {
-    padding-bottom: 10px;
+#left-panel {
+    margin-left: 15px;
+    border-radius: 0px;
 }
-.minicolors-swatch {
-    top: 15px !important;
+#setting-panel {
+    border-radius: 0px;
 }
-#setting-panel, #left-panel {
-    height: 80% !important;
+.flexsec {
+    display: flex;
+    flex-flow: column;
+    align-items: stretch;
+    height: 100%;
+}
+.flexfix {
+    flex: 0 1 auto;
+}
+.flexfill {
+    flex: 1 1 auto; 
+    overflow: auto;
 }
