@@ -80,14 +80,7 @@ body {
 .calendarWarp {
     width: 100%;
 }
-
-/* .global-control {
-    flex-flow: column;
-    display:flex;
-} */
-
 .lucky-list {
-    /* flex: 3; */
     height: 40%;
     border: 1px solid rgb(158, 158, 158);
     overflow-y: auto;

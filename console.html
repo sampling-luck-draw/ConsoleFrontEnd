@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-    <!-- <link rel="stylesheet" href="assets/css/materialize.min.css"/> -->
     <link rel="stylesheet" href="assets/css/materialdesignicons.min.css"/>
-    <!-- <link rel="stylesheet" href="assets/css/ECalendar_date_style.css"/> -->
-    <!-- <link rel="stylesheet" href="assets/css/jquery.minicolors.min.css"> -->
+    <link rel="stylesheet" href="assets/css/ECalendar_date_style.css"/>
+    <link rel="stylesheet" href="assets/css/jquery.minicolors.min.css">
+    <link rel="stylesheet" href="assets/css/component-chosen.min.css">
+    <link rel="stylesheet" href="assets/css/notifyMessage.css" />
     <link rel="stylesheet" href="assets/css/console.css"/>
     <title>三百两抽奖系统控制台</title>
 </head>
@@ -18,7 +19,7 @@
             <!-- Links -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="mdi mdi-library-books" style="font-size: 16px;"></i> 帮助文档</a>
+                    <a class="nav-link" id="help-doc" href="#"><i class="mdi mdi-library-books" style="font-size: 16px;"></i> 帮助文档</a>
                 </li>  
                 <!-- Dropdown -->
                 <!-- <li class="nav-item dropdown">
@@ -34,139 +35,157 @@
             </ul>
         </nav>
         <!-- Nav pills -->
-        <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #00BCD4;">
-            <ul class="nav nav-pills" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="pill" href="#basic-info">基本信息</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#prize-pool">奖池设置</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#style-theme">方式主题</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#danmu-sets">弹幕设置</a>
-                </li>
-            </ul>
+        <nav class="navbar navbar-expand-sm navbar-dark row" id="menu">
+            <div class="col-md-4" id="left-panel-tab">
+                <ul class="nav nav-pills" role="tablist">
+                    <li class="nav-item">
+                        <a class="underline nav-link active">抽奖页面实时监控</a> 
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-8" style="padding-left: 0px;">
+                <ul class="nav nav-pills" role="tablist">
+                    <li class="nav-item">
+                        <a class="underline nav-link active" data-toggle="pill" href="#basic-info">基本信息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="underline nav-link" data-toggle="pill" href="#prize-pool">奖池设置</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="underline nav-link" data-toggle="pill" href="#style-theme">方式主题</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="underline nav-link" data-toggle="pill" href="#danmu-sets">弹幕设置</a>
+                    </li>
+                </ul>
+            </div>
         </nav>
         <!-- Nav pills end -->
     </div><!--header-->
     <div class="row main">
         <div class="col-md-4">
             <div class="card flexsec" id="left-panel">
-                <video class="flexfix" controls="controls" id="video" preload="auto" width="100%;" style="margin-top: 0%">
+                <video class="flexfix" controls="controls" preload="auto" id="spy">
                     <source src="" type="video/mp4">
                 </video>
                 <div class="flexfill global-control">
-                    <div class="row" style="margin-bottom: 0px;">
-                        <div class="col-md-6">
-                            <a class="waves-effect waves-light btn btn-activity-action">
-                                <i id="activity-action" class="mdi mdi-arrow-right-drop-circle-outline right"></i>
-                                <label id="activity-label">
-                                    开始活动
-                                </label>
-                            </a>
-                        </div>
-                        <div class="col 6s">
-                            <a class="waves-effect waves-light btn btn-draw-action disabled">
-                                <i id="draw-action" class="mdi mdi-arrow-right-drop-circle-outline right"></i>
-                                <label id="draw-label">
-                                    开始抽奖
-                                </label>
-                            </a>
-                        </div>
+                    <div class="flexsec">
+                    <div class="btn-group flexfix" style="width: 100%; min-height: 3rem;">
+                        <button type="button" class="btn btn-activity-action">
+                            <i id="activity-action" class="mdi mdi-arrow-right-drop-circle-outline"></i>
+                            <span id="activity-label">开始活动</span>
+                        </button>
+                        <button type="button" class="btn btn-draw-action" disabled="true">        
+                            <i id="draw-action" class="mdi mdi-arrow-right-drop-circle-outline"></i>
+                            <span id="draw-label">开始抽奖</span>
+                        </button>
                     </div>
-                    <div class="row cur-item">
-                        <div class="input-field col-md-12">
-                            <input style="margin-bottom: 0px;" type="text" 
-                            id="cur-item-input" list="items" autocomplete="true" onkeydown="return false;"></input>
+                    <div class="cur-item flexfix">
+                        <div class="input-field">
                             <label >当前奖项名称</label>
+                            <input type="text" 
+                            id="cur-item-input" list="items" autocomplete="true" onkeydown="return false;">
+                            </input>
                             <datalist id="items"></datalist>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="lucky-list" style="margin-left: 0.75rem; margin-right: 0.75rem;">
-                            <table class="responsive-table display striped" cellspacing="0">
-                                <thead id="lucky-list-head">
-                                    <tr>
-                                        <th width="50%">用户名称</th>
-                                        <th width="50%">奖品名称</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="lucky-list-body"></tbody>
-                            </table>
-                        </div>
+                    <table class="table table-bordered inline-table" cellspacing="0" id="lucky-list-head">
+                        <thead>
+                            <tr>
+                                <th width="50%">用户名称</th>
+                                <th width="50%">奖品名称</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="lucky-list flexfill">
+                        <table class="table table-bordered inline-table" cellspacing="0">
+                            <tbody id="lucky-list-body">
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                                <tr><td>lll</td><td>lll</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                     </div>
                 </div><!--/.global-control-->
             </div><!--/.card-->
         </div>
-        <div class="col-md-8" style="padding-left: 0px; padding-right: 0px;">
+        <div class="col-md-8">
             <!-- Tab panes -->
-            <div class="card tab-content" id="setting-panel">
+            <div class="card tab-content flexsec" id="setting-panel">
                 <div class="container tab-pane active" id="basic-info">
-                    <div class="row" style="margin-bottom: 0px;">
-                        <form class="col-md-12" style="margin-top: 20px; margin-bottom: 0px;">
+                    <div class="row flexfix">
+                        <div class="input-field col-md-6">
+                            <input id="activity-name" type="text" autocomplete="off">
+                            <label for="activity-name" class="">活动名称</label>
+                        </div>
+                        <div class="input-field col-md-6" style="margin: 0px;">
                             <div class="row">
-                                <div class="input-field col-md-6">
-                                    <input id="activity-name" type="text" autocomplete="off">
-                                    <label for="activity-name" class="">活动名称</label>
+                                <div class="input-field col-md-8">
+                                    <input id="parts" type="text" autocomplete="off" onclick="$('#participants').click();">
+                                    <label for="parts" class="parts-label">用户信息</label>
                                 </div>
-                                <div class="input-field col-md-6">
-                                    <div class="row">
-                                        <div class="input-field col-md-8" style="margin: 0px; padding: 0px;">
-                                            <input id="parts" type="text" autocomplete="off" onclick="$('#participants').click();">
-                                            <label for="parts" class="parts-label" style="left: 0px;">用户信息</label>
-                                        </div>
-                                        <div class="col-md-4" style="margin: 0px; padding: 0px;">
-                                            <a class="btn waves-effect waves-light import-participants" onclick="$('#participants').click();">导入文件</a>
-                                        </div>
-                                    </div>
-                                    <input type="file" id='participants'  accept=".csv" style="display: none">
-                                </div>
-                                <div class="input-field col-md-6">
-                                    <label for="start-time" class="active">活动开始时间</label>
-                                    <div class="calendarWarp">
-                                        <input type="text" class='ECalendar' id="start-time"/>
-                                    </div>
-                                </div>
-                                <div class="input-field col-md-6">
-                                    <label for="end-time" class="active">活动结束时间</label>
-                                    <div class="calendarWarp">
-                                        <input type="text" class='ECalendar' id="end-time"/>
-                                    </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-info import-participants" onclick="$('#participants').click();" 
+                                    style="position: absolute; bottom: 20px; width: calc(100% - 30px);">导入文件</button>
                                 </div>
                             </div>
-                        </form>
+                            <input type="file" id='participants' accept=".csv" style="display: none">
+                        </div>
+                        <div class="input-field col-md-6">
+                            <label for="start-time" class="active">活动开始时间</label>
+                            <div class="calendarWarp">
+                                <input type="text" class='ECalendar' id="start-time"/>
+                            </div>
+                        </div>
+                        <div class="input-field col-md-6">
+                            <label for="end-time" class="active">活动结束时间</label>
+                            <div class="calendarWarp">
+                                <input type="text" class='ECalendar' id="end-time"/>
+                            </div>
+                        </div>
                     </div>
-                    <div class="parts-list">
-                        <table class="responsive-table display striped" cellspacing="0">
+                    <div class="flexfill parts-list scrollbar">
+                        <table class="table table-bordered inline-table" cellspacing="0">
                             <thead id="parts-list-head"></thead>
                             <tbody id="parts-list-body"></tbody>
                         </table>
                     </div>
                 </div>
                 <div class="container tab-pane fade" id="prize-pool">
-                    <div class="row" style="margin-top: 20px;">
+                    <div class="row flexfix" style="margin-top: 20px;">
                         <div class="input-field col-md-12">
-                            <select>
+                            <select class="form-control form-control-chosen">
                                 <option value="1">固定奖项抽用户</option>
                                 <option value="2">固定用户抽奖项</option>
                             </select>
-                            <label>抽奖模式</label>                        
+                            <label class="active">抽奖模式</label>                        
                         </div>
+                    </div>
+                    <div class="row flexfill">
                         <div class="col-md-4">
-                            <div class="row" style="margin-bottom: 0px;">
-                                <div class="col-md-12 table-header" style="padding-left: 0px;">
-                                    <p class="header">奖品列表设置</p>
+                            <div class="row" style="margin-left: 0px; margin-right: 0px;">
+                                <div class="col-md-12 table-header">
+                                    奖品列表设置
                                 </div>
                                 <div class="col-md-12 table-adder">
-                                    <a class="btn-floating btn-move-up waves-effect waves-light darken-2 right btn-add-prize">
-                                        <i class="mdi mdi-plus activator"></i></a>
+                                    <button class="btn btn-round btn-add-prize right">
+                                        <i class="mdi mdi-plus activator"></i></button>
                                 </div>
                             </div>
-                            <div class="prize-list col-md-12">
-                                <table class="" cellspacing="0">
+                            <div class="prize-list scrollbar">
+                                <table class="table table-bordered inline-table" cellspacing="0">
                                     <thead id="prize-list-head">
                                         <tr><th width="80%">奖品名称</th><th width="20%"></th></tr>
                                     </thead>
@@ -175,17 +194,17 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <div class="row" style="margin-bottom: 0px;">
-                                <div class="col-md-12 table-header" style="padding-left: 0px;">
-                                    <p class="header">奖项列表设置</p>
+                            <div class="row" style="margin-left: 0px; margin-right: 0px;">
+                                <div class="col-md-12 table-header">
+                                    奖项列表设置
                                 </div>
                                 <div class="col-md-12 table-adder">
-                                    <a class="btn-floating btn-move-up waves-effect waves-light darken-2 right btn-add-item">
-                                        <i class="mdi mdi-plus activator"></i></a>
+                                    <button class="btn btn-round btn-add-item right">
+                                        <i class="mdi mdi-plus activator"></i></button>
                                 </div>
                             </div>
-                            <div class="item-list col-md-12">
-                                <table class="" cellspacing="0">
+                            <div class="item-list scrollbar">
+                                <table class="table table-bordered inline-table" cellspacing="0">
                                     <thead id="item-list-head">
                                         <tr>
                                             <th width="40%">奖项名称</th>
@@ -201,142 +220,83 @@
                     </div>
                 </div>
                 <div class="container tab-pane fade" id="style-theme">
-                    <div class="row">
-                        <form class="col-md-12" style="margin-top: 20px; margin-bottom: 0px;">
-                            <div class="row">
-                                <div class="input-field col-md-6">
-                                    <label class="active">抽奖风格</label>
-                                    <select id="draw-style">
-                                        <option value="cube">魔方</option>
-                                        <option value="flash">闪烁</option>
-                                        <option value="swing">晃动</option>
-                                        <option value="load">默认</option>
-                                    </select>
-                                </div>
-                                <div class="input-field col-md-6">
-                                    <input class="minicolors" id="show-style" type="text" style="">
-                                    <label for="show-style" class="active">主题颜色</label>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="row flexfix" style="margin-top: 20px;">
+                        <div class="input-field col-md-6">
+                            <select id="draw-style" class="form-control form-control-chosen">
+                                <option value="cube">魔方</option>
+                                <option value="flash">闪烁</option>
+                                <option value="swing">晃动</option>
+                                <option value="load">默认</option>
+                            </select>
+                            <label class="active">抽奖风格</label>
+                        </div>
+                        <div class="input-field col-md-6" style="margin-top: 5px;">
+                            <input class="minicolors" id="show-style" type="text">
+                            <label for="show-style" class="active">主题颜色</label>
+                        </div>
                     </div>
                 </div>
                 <div class="container tab-pane fade" id="danmu-sets">
-                    <div class="row" style="margin-bottom: 0px;">
-                        <form action="#" class="col-md-12" style="margin-top: 20px; margin-bottom: 0px;">
-                            <div class="range-field">
-                                <div class="col-md-12 m8 l9">
-                                    <label>Set font size</label>
-                                    <form action="#">
-                                        <p class="range-field">
-                                            <input type="range" id="test5" min="6" max="72">
-                                                <span class="thumb" style="left: 68.975px; height: 0px; width: 0px; top: 10px; margin-left: 10px;">
-                                                </span>
-                                            </input>
-                                        </p>
-                                    </form>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 m8 l9">
-                                        <label>Choose font</label>
-                                        <select class="browser-default">
-                                            <option value="" disabled="" selected="">Arial</option>
-                                            <option value="1">Arial</option>
-                                            <option value="2">Comic Sans</option>
-                                            <option value="3">Option 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 m8 l9">
-                                        <label>Choose font color</label>
-                                        <select class="browser-default">
-                                            <option value="" disabled="" selected="">Black</option>
-                                            <option value="1">Black</option>
-                                            <option value="2">White</option>
-                                            <option value="3">Yellow</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 m8 l9">
-                                        <label>Choose speed</label>
-                                        <select class="browser-default">
-                                            <option value="" disabled="" selected="">Normal</option>
-                                            <option value="1">Slow</option>
-                                            <option value="2">Normal</option>
-                                            <option value="3">Fast</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 m8 l9">
-                                        <label>Choose position</label>
-                                        <select class="browser-default">
-                                            <option value="" disabled="" selected="">Top</option>
-                                            <option value="1">Top</option>
-                                            <option value="2">Middle</option>
-                                            <option value="3">Bottom</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 m8 l9">
-                                    <label>Set opacity</label>
-                                    <form action="#">
-                                        <p class="range-field">
-                                            <input type="range" id="test5" min="0" max="10">
-                                                <span class="thumb" style="left: 68.975px; height: 0px; width: 0px; top: 10px; margin-left: 10px;">
-                                                </span>
-                                            </input>
-                                        </p>
-                                    </form>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="row">
+                        <div class="input-field col-md-6">
+                            <input type="range" id="font-size" min="6" max="72" value="20"
+                            style="background: linear-gradient(to right, #343A40, #ebeff4 30.3%, #ebeff4)"></input>
+                            <p class="range-value"></p>
+                            <label class="active">字体大小</label>
+                        </div>
+                        <div class="input-field col-md-6">
+                            <input type="range" id="opacity" min="0" max="10" value="5"
+                            style="background: linear-gradient(to right, #343A40, #ebeff4 50%, #ebeff4)"></input>
+                            <p class="range-value"></p>
+                            <label class="active">透明程度</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="input-field col-md-6">
+                            <select id="font-family" class="form-control form-control-chosen">
+                                <option value="1">Arial</option>
+                                <option value="2">Comic Sans</option>
+                                <option value="3">Courier New</option>
+                            </select>
+                            <label class="active">弹幕字体</label>
+                        </div>
+                        <div class="input-field col-md-6">
+                            <select id="font-color" class="form-control form-control-chosen">
+                                <option value="1">Black</option>
+                                <option value="2">White</option>
+                                <option value="3">Yellow</option>
+                            </select>
+                            <label class="active">弹幕颜色</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="input-field col-md-6">
+                            <select id="danmu-speed" class="form-control form-control-chosen">
+                                <option value="1">Slow</option>
+                                <option value="2">Normal</option>
+                                <option value="3">Fast</option>
+                            </select>
+                            <label class="active">弹幕速度</label>
+                        </div>
+                        <div class="input-field col-md-6">
+                            <select id="danmu-position" class="form-control form-control-chosen">
+                                <option value="1">Top</option>
+                                <option value="2">Middle</option>
+                                <option value="3">Bottom</option>
+                            </select>
+                            <label class="active">弹幕位置</label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div><!--/.main-->
-        <!-- <nav class="nav-extended" style="background-color: #1B7690;">
-            <div class="nav-wrapper" style="height: 63px;">
-                <a href="https://sampling.alphamj.cn/" target="new" class="brand-logo" style="padding-left: 20px;">SAMPLING</a>
-                <ul class="right">
-                    <li>
-                        <a class="waves-effect waves-block waves-light">
-                            <i class="mdi mdi-library-books" style="font-size: 16px;">
-                                <span style='font-size: 16px; font-style: normal;'> 帮助文档</span></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="nav-content">
-                <div class="row" style="margin-bottom: 10px;">
-                <div class="col-md-4" style="width: 30%; margin-left: 20px; margin-right: 20px; padding-left: 0px;">
-                    <ul class="tabs tabs-transparent">
-                        <li class="tab"><a>抽奖页面实时监控</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-8" style="padding-left: 0px;">
-                    <ul class="tabs tabs-transparent">
-                        <li class="tab"><a class="active" href="#basic-info">基本信息</a></li>
-                        <li class="tab"><a class="" href="#prize-pool">奖池设置</a></li>
-                        <li class="tab"><a class="" href="#style-theme">方式主题</a></li>
-                        <li class="tab"><a href="#test4">弹幕设置</a></li>
-                    </ul>
-                </div>
-                </div>
-            </div>
-        </nav>
-    </div> -->
-    <!-- <div class="row main" style="margin: 0px;">
-        
-    </div> -->
 </body>
 </html>
 <script type="text/javascript" src="assets/js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-<!-- <script type="text/javascript" src="assets/js/materialize.min.js"></script> -->
 <script type="text/javascript" src="assets/js/Ecalendar.jquery.min.js"></script>
 <script type="text/javascript" src="assets/js/jquery.minicolors.min.js"></script>
-<!-- <script type="text/javascript" src="assets/js/console.js"></script> -->
+<script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
+<script type="text/javascript" src="assets/js/notifyMessage.js"></script> 
+<script type="text/javascript" src="assets/js/console.js"></script>
