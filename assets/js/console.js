@@ -274,6 +274,89 @@ function show_lucky_dog(username, prizename) {
 }
 /* show luck dog end */
 
+//-------------------------------bjz-begin---------------------------------
+//-------------------------------bjz-begin---------------------------------
+//-------------------------------bjz-begin---------------------------------
+//-------------------------------bjz-begin---------------------------------
+
+function getQueryString(name) {//获取name参数的值
+    var result = window.location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+    if (result == null || result.length < 1) {
+        return "";
+    }
+    return result[1];
+}
+
+var path=getQueryString('path');
+// console.log(path);
+// var fso=new ActiveXObject(Scripting.FileSystemObject);
+// var f=fso.opentextfile(path,1,true);
+// while (!f.AtEndOfStream) {
+//     console.log(f.Readline());
+// }
+// f.close();
+function get_history_information(){///得到历史活动参数
+
+    let data =  {
+        username: path,
+        // password: $('#inputPassword').val(),
+    };
+    if (data.username === '' || data.password === '')
+
+    $.ajax({
+        url: 'signin',//老才的服务器名
+        method: 'POST',
+        contentType: 'json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        success: function(e) {
+            if (e.result === 'success') {
+                window.location.href="usercenter"
+            } else {
+                console.log(e.msg);
+                $("#toast-body").html(e.msg);
+                $('.toast').toast('show');
+            }
+            console.log('活动名称'+e.activity_name);
+            console.log('最大人数'+e.activity_maxnum);
+            console.log('结束时间'+e.endtime);
+            console.log('奖项信息'+e.reward_information);
+
+        },
+        error: function (e) {
+            console.log(e);
+        }
+    })
+}
+function save_information_as_history(){///保存活动信息
+    let data =  {
+        activity_id:'tem_activity_id',
+        activity_name:'tem_activity_name',
+        activity_maxnum:'tem_activity_maxnum',
+        reward_information:'tem_reward_information',
+        // password: $('#inputPassword').val(),
+    };
+    $.ajax({
+        url: 'signin',//老才的服务器名
+        method: 'POST',
+        contentType: 'json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        success: function(e) {
+            console.log('保存成功');
+        },
+        error: function (e) {
+            console.log(e);
+        }
+    })
+
+}
+jsReadFiles(path);
+//-------------------------------bjz-end---------------------------------
+//-------------------------------bjz-end---------------------------------
+//-------------------------------bjz-end---------------------------------
+//-------------------------------bjz-end---------------------------------
+
 /* initialization and bindings */
 $(document).ready(function () {
 
