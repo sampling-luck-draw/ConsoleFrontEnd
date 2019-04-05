@@ -150,6 +150,7 @@ body {
 }
 table.inline-table {
     font-size: 0.9rem;
+    margin-bottom: 0px;
 }
 #lucky-list-head {
     margin-bottom: -2px !important;
@@ -220,7 +221,7 @@ div.input-field .chosen-drop, div.input-field div.chosen-container a, div.input-
 }
 .right {
     position: absolute;
-    right: 15px;
+    right: 10px;
 }
 .table-adder {
     height: 1.25rem;
@@ -231,9 +232,6 @@ div.input-field .chosen-drop, div.input-field div.chosen-container a, div.input-
 .prize-list, .item-list {
     height: calc(100% - 260px);
     overflow-y: auto;
-}
-.prize-list table, .item-list table {
-    margin-bottom: 0px;
 }
 td input {
     border: none;
@@ -254,11 +252,17 @@ td input:focus {
     border-bottom: #5F9EA0 solid 1px;
     box-shadow: 0px 1px 0px #5F9EA0; /*下边阴影*/
 }
-div.del-item i.mdi, div.del-prize i.mdi {
-    font-size: 1.5rem;
+.table-icon i.mdi {
+    font-size: 1.2rem;
 }
-.del-item, .del-prize {
+.table-icon {
+    display: inline-block;
     text-align: center;
+    cursor: pointer;
+}
+.icon-td {
+    text-align: center !important;
+    vertical-align: middle !important;
 }
 .minicolors {
     width: 100% !important;
@@ -300,4 +304,46 @@ input[type=range]:focus {
 .range-value {
     position: absolute;
     top: 0.7rem;
+}
+#prize-list-body input {
+    cursor: move;
+}
+#prize-list-body input:focus {
+    cursor: text;
+}
+#cheat-info {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    animation: fadeIn 0.2s;
+	-webkit-animation: fadeIn 0.2s;
+}
+@keyframes fadeIn {
+	0%   {opacity: 0;}
+	25%  {opacity: 0.25;}
+	50%  {opacity: 0.5;}
+	75%  {opacity: 0.75;}
+	100% {opacity: 1;}
+}
+.modal-content {
+    overflow: hidden;
+    height: 90%;
+}
+.cheat-scroll {
+    height: calc(100% - 210px);
+    overflow-y: auto;
+}
+.cheat-info-header {
+    color: white;
+    background-color: #343A40;
+}
+#cheat-statebar {
+    color: tomato;
+    position: absolute;
+    left: 1rem;
+    display: none;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }

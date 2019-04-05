@@ -168,13 +168,13 @@
                         <div class="input-field col-md-12">
                             <select class="form-control form-control-chosen">
                                 <option value="1">固定奖项抽用户</option>
-                                <option value="2">固定用户抽奖项</option>
+                                <option value="2" disabled="disabled">固定用户抽奖项</option>
                             </select>
                             <label class="active">抽奖模式</label>                        
                         </div>
                     </div>
                     <div class="row flexfill">
-                        <div class="col-md-4">
+                        <div class="col-md-4" style="position: relative">
                             <div class="row" style="margin-left: 0px; margin-right: 0px;">
                                 <div class="col-md-12 table-header">
                                     奖品列表设置
@@ -192,6 +192,24 @@
                                     <tbody id="prize-list-body"></tbody>
                                 </table>
                             </div>
+                            <div class="hover row" id="cheat-info" style="width: 100%;">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered inline-table" cellspacing="0">
+                                        <thead class="cheat-info-header">
+                                            <tr><th>中奖人选列表</th></tr>
+                                        </thead>
+                                        <tbody id="cheat-winner-info"></tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-12">
+                                    <table class="table table-bordered inline-table" cellspacing="0">
+                                        <thead class="cheat-info-header">
+                                            <tr><th>排除人员列表</th></tr>
+                                        </thead>
+                                        <tbody id="cheat-loser-info"></tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-8">
                             <div class="row" style="margin-left: 0px; margin-right: 0px;">
@@ -207,10 +225,10 @@
                                 <table class="table table-bordered inline-table" cellspacing="0">
                                     <thead id="item-list-head">
                                         <tr>
-                                            <th width="40%">奖项名称</th>
+                                            <th width="35%">奖项名称</th>
                                             <th width="40%">对应奖品</th>
                                             <th width="10%">数量</th>
-                                            <th width="10%"></th>
+                                            <th width="15%"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="item-list-body"></tbody>
@@ -291,6 +309,69 @@
             </div>
         </div>
     </div><!--/.main-->
+
+    <!-- 模态框 -->
+    <div class="modal fade" id="cheat-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">      
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title"><span id="cheat-kind"></span>作弊信息表</h4>
+                    <button type="button" class="close" onclick="quit_cheat_cfg()">&times;</button>
+                </div>
+                <!-- 模态框主体 -->
+                <div class="modal-body row">
+                    <div class="col-md-6">
+                        <div class="row" style="margin-left: 0px; margin-right: 0px;">
+                            <div class="col-md-12 table-header">
+                                中奖人选列表
+                            </div>
+                            <div class="col-md-12 table-adder">
+                                <button class="btn btn-round right" id="btn-add-winner">
+                                    <i class="mdi mdi-plus activator"></i></button>
+                            </div>
+                        </div>
+                        <div class="cheat-scroll scrollbar">
+                            <table class="table table-bordered inline-table" cellspacing="0">
+                                <thead>
+                                    <tr><th width="80%">用户ID</th><th width="20%"></th></tr>
+                                </thead>
+                                <tbody id="cheat-winner"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row" style="margin-left: 0px; margin-right: 0px;">
+                            <div class="col-md-12 table-header">
+                                排除人员列表
+                            </div>
+                            <div class="col-md-12 table-adder">
+                                <button class="btn btn-round right" id="btn-add-loser">
+                                    <i class="mdi mdi-plus activator"></i></button>
+                            </div>
+                        </div>
+                        <div class="cheat-scroll scrollbar">
+                            <table class="table table-bordered inline-table" 
+                            cellspacing="0" ondrop="drop_cheat_item(this, event)" ondragover="allowDrop(event)">
+                                <thead>
+                                    <tr><th width="80%">用户ID</th><th width="20%"></th></tr>
+                                </thead>
+                                <tbody id="cheat-loser"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- 模态框底部 -->
+                <div class="modal-footer">
+                    <div class="alert alert-danger alert-dismissible fade show" id="cheat-statebar">
+                        
+                    </div>
+                    <button type="button" class="btn btn-info" onclick="save_cheat_info()">保存</button>
+                    <button type="button" class="btn btn-secondary" onclick="quit_cheat_cfg()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 <script type="text/javascript" src="assets/js/jquery-2.1.1.min.js"></script>

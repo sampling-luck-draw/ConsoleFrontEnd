@@ -1,6 +1,7 @@
 /* global variable begin */
 let drawing = false;
 let running = false;
+let cheat_data = new Array();
 /* global variable end */
 
 /** WebSocket initialization begin */
@@ -161,8 +162,9 @@ var eCalendar = {
         if ($('#prize-list-body').find("tr").length == 0 || $('#prize-list-body tr:last').find('input').val()) {
             $("#prize-list-body").append(`<tr>
             <td><input class="table-input" style="margin-bottom: 0px;" type="text" draggable="true" ondragstart="drag_prize(event)" onblur="check_content(this)"></input></td>
-            <td><div class="del-prize" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
+            <td class="icon-td"><div class="del-prize table-icon" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
             </tr>`);
+            $(".table-input").attr("onkeydown", "input_keydown(this, event)");
         }
         $('#prize-list-body tr:last').find('input').focus();
     }
@@ -176,8 +178,14 @@ var eCalendar = {
             <td><input class="table-input item-name" style="margin-bottom: 0px;" type="text" onblur="check_content(this)"></input></td>
             <td><input readonly="readonly" style="margin-bottom: 0px; color: rgb(64, 77, 91);" ondrop="drop_prize(event)" ondragover="allowDrop(event)"></input></td>
             <td><input class="table-input" style="margin-bottom: 0px;" type="number" min="1"></input></td>
-            <td><div class="del-item" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
+            <td class="icon-td">
+            <div class="cfg-cheat table-icon" onclick="cfg_cheat(this)"><i class="mdi mdi-settings"></i></div>
+            <div class="del-item table-icon" onclick="del_item(this)"><i class="mdi mdi-trash-can-outline"></i></div>
+            </td>
             </tr>`);
+            $(".table-input").attr("onkeydown", "input_keydown(this, event)");
+            $(".cfg-cheat").attr("onmouseover", "show_cheat_info(this, event)");
+            $(".cfg-cheat").attr("onmouseout", "hide_cheat_info(this, event)");
         }
         $('#item-list-body tr:last').find('input.item-name').focus();
     }
@@ -199,7 +207,7 @@ var eCalendar = {
                     messageTitle: 'title',
                     levelMessage: 'error',
                     timer: '1000'
-                }); 
+                });
                 obj.focus();
                 return false;
             }
@@ -214,6 +222,17 @@ var eCalendar = {
         tr.parentNode.removeChild(tr);
     }
     /* delete a row end */
+
+    /* delete an item begin */
+    function del_item(obj) {
+        var item_name = $(obj).parent().parent().find(".item-name").val();
+        if (item_name != '' && item_name in cheat_data) {
+            delete cheat_data[item_name];
+            // console.log(cheat_data);
+        }
+        del_row(obj);
+    }
+    /* delete an item end */
 
     /* prize-name draggable begin */
     function drag_prize(event) {
@@ -249,7 +268,7 @@ function get_items() {
     $(this).val("");
     var items = "";
     $("#item-list-body tr").each(function() {
-        var text = $(this).children("td:first").find("input").val() + ' ';
+        var text = $(this).children("td:first").find("input").val();
         if (text) {
             items += '<option value="' + text + '" />';
         }
@@ -274,84 +293,251 @@ function show_lucky_dog(username, prizename) {
 }
 /* show luck dog end */
 
-//-------------------------------bjz-begin---------------------------------
-//-------------------------------bjz-begin---------------------------------
-//-------------------------------bjz-begin---------------------------------
-//-------------------------------bjz-begin---------------------------------
-
-function getQueryString(name) {//获取name参数的值
-    var result = window.location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
-    if (result == null || result.length < 1) {
-        return "";
+/* cheat function begin */
+function cfg_cheat(obj) {
+    var item_name = $(obj).parent().parent().find(".item-name").val();
+    $("#cheat-kind").text(item_name);
+    if (item_name in cheat_data) {
+        cheat_data[item_name].winner.forEach(function(value, i) {
+            $("#cheat-winner").append(`<tr>
+            <td><input class="table-input" value="` + value + `"style="margin-bottom: 0px;" type="text" onblur="check_content(this)"></input></td>
+            <td class="icon-td"><div class="del-winner table-icon" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
+            </tr>`);
+        });
+        cheat_data[item_name].loser.forEach(function(value, i) {
+            $("#cheat-loser").append(`<tr>
+            <td><input class="table-input" value="` + value + `" style="margin-bottom: 0px;" type="text" onblur="check_content(this)"></input></td>
+            <td class="icon-td"><div class="del-loser table-icon" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
+            </tr>`);
+        });
+        $(".table-input").attr("onkeydown", "input_keydown(this, event)");
     }
-    return result[1];
+    $(".modal").modal('show');
 }
-
-var path=getQueryString('path');
-// console.log(path);
-// var fso=new ActiveXObject(Scripting.FileSystemObject);
-// var f=fso.opentextfile(path,1,true);
-// while (!f.AtEndOfStream) {
-//     console.log(f.Readline());
-// }
-// f.close();
-function get_history_information(){///得到历史活动参数
-
-    let data =  {
-        username: path,
-        // password: $('#inputPassword').val(),
-    };
-    if (data.username === '' || data.password === '')
-
-    $.ajax({
-        url: 'signin',//老才的服务器名
-        method: 'POST',
-        contentType: 'json',
-        dataType: 'json',
-        data: JSON.stringify(data),
-        success: function(e) {
-            if (e.result === 'success') {
-                window.location.href="usercenter"
-            } else {
-                console.log(e.msg);
-                $("#toast-body").html(e.msg);
-                $('.toast').toast('show');
+function show_cheat_info(obj, event) {
+    // console.log("hover");
+    var max_len = 3;
+    var item_name = $(obj).parent().parent().find(".item-name").val();
+    if (item_name in cheat_data) {
+        // console.log("show hover");
+        if (cheat_data[item_name].winner.length == 0) {
+            $("#cheat-winner-info").append(`<tr><td>无</td></tr>`);
+        } else {
+            for (var i = 0; i < cheat_data[item_name].winner.length; i ++) {
+                $("#cheat-winner-info").append(`<tr><td>` + cheat_data[item_name].winner[i] + `</td></tr>`);
+                if (i + 1 >= max_len) break;
             }
-            console.log('活动名称'+e.activity_name);
-            console.log('最大人数'+e.activity_maxnum);
-            console.log('结束时间'+e.endtime);
-            console.log('奖项信息'+e.reward_information);
-
-        },
-        error: function (e) {
-            console.log(e);
+            if (cheat_data[item_name].winner.length >= max_len) {
+                $("#cheat-winner-info").append(`<tr><td>. . .</td></tr>`);
+            }
         }
-    })
-}
-function save_information_as_history(){///保存活动信息
-    let data =  {
-        activity_id:'tem_activity_id',
-        activity_name:'tem_activity_name',
-        activity_maxnum:'tem_activity_maxnum',
-        reward_information:'tem_reward_information',
-        // password: $('#inputPassword').val(),
-    };
-    $.ajax({
-        url: 'signin',//老才的服务器名
-        method: 'POST',
-        contentType: 'json',
-        dataType: 'json',
-        data: JSON.stringify(data),
-        success: function(e) {
-            console.log('保存成功');
-        },
-        error: function (e) {
-            console.log(e);
+        if (cheat_data[item_name].loser.length == 0) {
+            $("#cheat-loser-info").append(`<tr><td>无</td></tr>`);
+        } else {
+            for (var i = 0; i < cheat_data[item_name].loser.length; i ++) {
+                $("#cheat-loser-info").append(`<tr><td>` + cheat_data[item_name].loser[i] + `</td></tr>`);
+                if (i + 1 >= max_len) break;
+            }
+            if (cheat_data[item_name].loser.length >= max_len) {
+                $("#cheat-loser-info").append(`<tr><td>. . .</td></tr>`);
+            }
         }
-    })
+        $("#cheat-info").show();
+    }
+}
+function hide_cheat_info(obj, event) {
+    $("#cheat-info").hide();
+    $("#cheat-winner-info").empty();
+    $("#cheat-loser-info").empty();
+}
+function check_cheat_content(obj) {
+    if (obj.value == "") {
+        del_row(obj);
+        return false;
+    }
+    var tr = $(obj).parent().parent();
+    var obj_index = tr.prevAll().length;
+    var error_info = function() {
+        $("#cheat-statebar").html("<strong>错误！</strong>用户ID存在冲突");
+        $("#cheat-statebar").show();
+        setTimeout(
+            function () {
+                $("#cheat-statebar").hide();
+            }, 2000
+        );
+    }
+    $(tr.parent()).find("tr").each(function(index, element) {
+        var input = $(this).children("td:first").find("input").val();
+        if (index != obj_index && obj.value == input) {
+            error_info();
+            obj.focus();
+            return false;
+        }
+    });
+    var other = tr.parent().attr('id') == "cheat-winner" ? "#cheat-loser": "#cheat-winner";
+    console.log(other);
+    $(other).find("tr").each(function(index, element) {
+        var input = $(this).children("td:first").find("input").val();
+        if (obj.value == input) {
+            error_info();
+            obj.focus();
+            return false;
+        }
+    });
+    return true;
+}
+function add_winner() {
+    if ($('input:focus').length != 0) return;
+    $("#cheat-winner").append(`
+        <tr draggable="true" ondragstart="drag_cheat_item(this, event)">
+            <td><input class="table-input" style="margin-bottom: 0px;" type="text" onblur="check_cheat_content(this)"></input></td>
+            <td class="icon-td"><div class="del-winner table-icon" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
+        </tr>`);
+    $(".table-input").attr("onkeydown", "input_keydown(this, event)");
+    $('#cheat-winner tr:last').find('input').focus();
+}
+function add_loser() {
+    if ($('input:focus').length != 0) return;
+    $("#cheat-loser").append(`
+        <tr>
+            <td><input class="table-input" style="margin-bottom: 0px;" type="text" onblur="check_cheat_content(this)"></input></td>
+            <td class="icon-td"><div class="del-loser table-icon" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
+        </tr>`);
+    $(".table-input").attr("onkeydown", "input_keydown(this, event)");
+    $('#cheat-loser tr:last').find('input').focus();
+}
+function drag_cheat_item(obj, event) {
+    $('input:focus').blur();
+    event.dataTransfer.setData("Text", $(obj).find("input").val());
+}
+function drop_cheat_item(obj, event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("Text");
+    console.log(data);
+    if ($(obj).attr("id") == "cheat-loser") {
+        add_loser();
+    } else {
+        add_winner();
+    }
+    $(obj).find('tr:last').find('input').val(data);
+}
+function allowDrop(event) {
+    event.preventDefault();
+}
+function save_cheat_info() {
+    var item_name = $("#cheat-kind").text();
+    cheat_data[item_name] = {winner: [], loser: []};
+    $("#cheat-winner tr").each(function() {
+        var text = $(this).children("td:first").find("input").val();
+        cheat_data[item_name].winner.push(text);
+    });
+    $("#cheat-loser tr").each(function() {
+        var text = $(this).children("td:first").find("input").val();
+        cheat_data[item_name].loser.push(text);
+    });
+    if (cheat_data[item_name].winner.length == 0 && cheat_data[item_name].loser.length == 0) {
+        delete cheat_data[item_name];
+    }
+    // console.log(cheat_data[item_name]);
+    quit_cheat_cfg();
+}
+function quit_cheat_cfg() {
+    $(".modal").modal('hide');
+    $("#cheat-winner").empty();
+    $("#cheat-loser").empty();
+}
+/* cheat function end */
+
+/* shotcut key functions begin */
+function global_keydown(e) { // global
 
 }
-jsReadFiles(path);
+function input_keydown(obj, event) { // input
+    if (event.key == 'Enter') {
+        $(obj).blur();
+        // console.log("blured");
+    }
+}
+/* shotcut key functions end */
+
+//-------------------------------bjz-begin---------------------------------
+//-------------------------------bjz-begin---------------------------------
+//-------------------------------bjz-begin---------------------------------
+//-------------------------------bjz-begin---------------------------------
+
+// function getQueryString(name) {//获取name参数的值
+//     var result = window.location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+//     if (result == null || result.length < 1) {
+//         return "";
+//     }
+//     return result[1];
+// }
+
+// var path=getQueryString('path');
+// // console.log(path);
+// // var fso=new ActiveXObject(Scripting.FileSystemObject);
+// // var f=fso.opentextfile(path,1,true);
+// // while (!f.AtEndOfStream) {
+// //     console.log(f.Readline());
+// // }
+// // f.close();
+// function get_history_information(){///得到历史活动参数
+
+//     let data =  {
+//         username: path,
+//         // password: $('#inputPassword').val(),
+//     };
+//     if (data.username === '' || data.password === '')
+
+//     $.ajax({
+//         url: 'signin',//老才的服务器名
+//         method: 'POST',
+//         contentType: 'json',
+//         dataType: 'json',
+//         data: JSON.stringify(data),
+//         success: function(e) {
+//             if (e.result === 'success') {
+//                 window.location.href="usercenter"
+//             } else {
+//                 console.log(e.msg);
+//                 $("#toast-body").html(e.msg);
+//                 $('.toast').toast('show');
+//             }
+//             console.log('活动名称'+e.activity_name);
+//             console.log('最大人数'+e.activity_maxnum);
+//             console.log('结束时间'+e.endtime);
+//             console.log('奖项信息'+e.reward_information);
+
+//         },
+//         error: function (e) {
+//             console.log(e);
+//         }
+//     })
+// }
+// function save_information_as_history(){///保存活动信息
+//     let data =  {
+//         activity_id:'tem_activity_id',
+//         activity_name:'tem_activity_name',
+//         activity_maxnum:'tem_activity_maxnum',
+//         reward_information:'tem_reward_information',
+//         // password: $('#inputPassword').val(),
+//     };
+//     $.ajax({
+//         url: 'signin',//老才的服务器名
+//         method: 'POST',
+//         contentType: 'json',
+//         dataType: 'json',
+//         data: JSON.stringify(data),
+//         success: function(e) {
+//             console.log('保存成功');
+//         },
+//         error: function (e) {
+//             console.log(e);
+//         }
+//     })
+
+// }
+// jsReadFiles(path);
 //-------------------------------bjz-end---------------------------------
 //-------------------------------bjz-end---------------------------------
 //-------------------------------bjz-end---------------------------------
@@ -387,4 +573,12 @@ $(document).ready(function () {
     /* draw and activity button clicked */
     $(".btn-draw-action").click(on_draw_btn_click);
     $(".btn-activity-action").click(on_activity_btn_click);
+
+    /* cheat binding */
+    $("#btn-add-winner").click(add_winner);
+    $("#btn-add-loser").click(add_loser);
+
+    /* shotcut key map */
+    document.onkeydown = global_keydown;
+    $("#cur-item-input").keydown(input_keydown);
 });
