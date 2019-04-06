@@ -1,0 +1,8 @@
+{
+    "action": "append-user",
+    "content": {
+        "nickname": "Justin Bieber",
+        "uid": "1234567890", 
+        "avatar": "assets/avatars/avatar0.png"
+    }
+}
