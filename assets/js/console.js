@@ -375,7 +375,7 @@ function check_cheat_content(obj) {
         }
     });
     var other = tr.parent().attr('id') == "cheat-winner" ? "#cheat-loser": "#cheat-winner";
-    console.log(other);
+    // console.log(other);
     $(other).find("tr").each(function(index, element) {
         var input = $(this).children("td:first").find("input").val();
         if (obj.value == input) {
@@ -399,27 +399,22 @@ function add_winner() {
 function add_loser() {
     if ($('input:focus').length != 0) return;
     $("#cheat-loser").append(`
-        <tr>
+        <tr draggable="true" ondragstart="drag_cheat_item(this, event)">
             <td><input class="table-input" style="margin-bottom: 0px;" type="text" onblur="check_cheat_content(this)"></input></td>
             <td class="icon-td"><div class="del-loser table-icon" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
         </tr>`);
     $(".table-input").attr("onkeydown", "input_keydown(this, event)");
     $('#cheat-loser tr:last').find('input').focus();
 }
+let drag_element = new Object();
 function drag_cheat_item(obj, event) {
     $('input:focus').blur();
-    event.dataTransfer.setData("Text", $(obj).find("input").val());
+    drag_element = obj;
 }
 function drop_cheat_item(obj, event) {
     event.preventDefault();
-    var data = event.dataTransfer.getData("Text");
-    console.log(data);
-    if ($(obj).attr("id") == "cheat-loser") {
-        add_loser();
-    } else {
-        add_winner();
-    }
-    $(obj).find('tr:last').find('input').val(data);
+    $(obj).find("table tbody").append($(drag_element).clone());
+    drag_element.parentNode.removeChild(drag_element);
 }
 function allowDrop(event) {
     event.preventDefault();

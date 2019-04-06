@@ -331,7 +331,7 @@
                                     <i class="mdi mdi-plus activator"></i></button>
                             </div>
                         </div>
-                        <div class="cheat-scroll scrollbar">
+                        <div class="cheat-scroll scrollbar"  ondrop="drop_cheat_item(this, event)" ondragover="allowDrop(event)">
                             <table class="table table-bordered inline-table" cellspacing="0">
                                 <thead>
                                     <tr><th width="80%">用户ID</th><th width="20%"></th></tr>
@@ -350,9 +350,8 @@
                                     <i class="mdi mdi-plus activator"></i></button>
                             </div>
                         </div>
-                        <div class="cheat-scroll scrollbar">
-                            <table class="table table-bordered inline-table" 
-                            cellspacing="0" ondrop="drop_cheat_item(this, event)" ondragover="allowDrop(event)">
+                        <div class="cheat-scroll scrollbar" ondrop="drop_cheat_item(this, event)" ondragover="allowDrop(event)">
+                            <table class="table table-bordered inline-table" cellspacing="0">
                                 <thead>
                                     <tr><th width="80%">用户ID</th><th width="20%"></th></tr>
                                 </thead>

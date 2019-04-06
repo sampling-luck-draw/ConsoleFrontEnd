@@ -347,3 +347,9 @@ input[type=range]:focus {
     padding-top: 8px;
     padding-bottom: 8px;
 }
+#cheat-winner tr, #cheat-loser tr {
+    cursor: move;
+}
+#cheat-winner input, #cheat-loser input {
+    cursor: text;
+}
