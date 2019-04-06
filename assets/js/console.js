@@ -178,7 +178,7 @@ var eCalendar = {
             $("#item-list-body").append(`<tr>
             <td><input class="table-input item-name" style="margin-bottom: 0px;" type="text" onblur="check_content(this)"></input></td>
             <td><input readonly="readonly" style="margin-bottom: 0px; color: rgb(64, 77, 91);" ondrop="drop_prize(event)" ondragover="allowDrop(event)"></input></td>
-            <td><input class="table-input" style="margin-bottom: 0px;" type="number" min="1"></input></td>
+            <td><input class="table-input" style="margin-bottom: 0px;" type="number" min="1" value="1"></input></td>
             <td class="icon-td">
             <div class="cfg-cheat table-icon" onclick="cfg_cheat(this)"><i class="mdi mdi-settings"></i></div>
             <div class="del-item table-icon" onclick="del_item(this)"><i class="mdi mdi-trash-can-outline"></i></div>
@@ -351,6 +351,28 @@ function hide_cheat_info(obj, event) {
     $("#cheat-winner-info").empty();
     $("#cheat-loser-info").empty();
 }
+function echo_info(statebar, state, content) {
+    var prefix = "";
+    var _class = "alert alert-dismissible ";
+    if (state == 0) {
+        prefix = "成功";
+        _class += "alert-success";
+    } else if (state == 1) {
+        prefix = "警告";
+        _class += "alert-warning";
+    } else if (state == 2) {
+        prefix = "错误";
+        _class += "alert-danger";
+    }
+    $(statebar).html("<strong>" + prefix + ": </strong>" + content);
+    $(statebar).attr("class", _class);
+    $(statebar).show();
+    setTimeout(
+        function () {
+            $(statebar).hide();
+        }, 2000
+    );
+}
 function check_cheat_content(obj) {
     if (obj.value == "") {
         del_row(obj);
@@ -358,19 +380,11 @@ function check_cheat_content(obj) {
     }
     var tr = $(obj).parent().parent();
     var obj_index = tr.prevAll().length;
-    var error_info = function() {
-        $("#cheat-statebar").html("<strong>错误！</strong>用户ID存在冲突");
-        $("#cheat-statebar").show();
-        setTimeout(
-            function () {
-                $("#cheat-statebar").hide();
-            }, 2000
-        );
-    }
+    
     $(tr.parent()).find("tr").each(function(index, element) {
         var input = $(this).children("td:first").find("input").val();
         if (index != obj_index && obj.value == input) {
-            error_info();
+            echo_info("#cheat-statebar", 2, "用户ID存在冲突");
             obj.focus();
             return false;
         }
@@ -380,15 +394,20 @@ function check_cheat_content(obj) {
     $(other).find("tr").each(function(index, element) {
         var input = $(this).children("td:first").find("input").val();
         if (obj.value == input) {
-            error_info();
+            echo_info("#cheat-statebar", 2, "用户ID存在冲突");
             obj.focus();
             return false;
         }
     });
     return true;
 }
+let max_winner = 1;
 function add_winner() {
     if ($('input:focus').length != 0) return;
+    if ($("#cheat-winner").find("tr").length >= max_winner) {
+        echo_info("#cheat-statebar", 1, "中奖人选超出上限");
+        return;
+    }
     $("#cheat-winner").append(`
         <tr draggable="true" ondragstart="drag_cheat_item(this, event)">
             <td><input class="table-input" style="margin-bottom: 0px;" type="text" onblur="check_cheat_content(this)"></input></td>
@@ -413,8 +432,13 @@ function drag_cheat_item(obj, event) {
     drag_element = obj;
 }
 function drop_cheat_item(obj, event) {
+    var $tbody = $(obj).find("table tbody");
+    if ($tbody.attr("id") == "cheat-winner" && $tbody.find("tr").length >= max_winner) {
+        echo_info("#cheat-statebar", 1, "中奖人选超出上限");
+        return;
+    }
     event.preventDefault();
-    $(obj).find("table tbody").append($(drag_element).clone());
+    $tbody.append($(drag_element).clone());
     drag_element.parentNode.removeChild(drag_element);
 }
 function allowDrop(event) {
