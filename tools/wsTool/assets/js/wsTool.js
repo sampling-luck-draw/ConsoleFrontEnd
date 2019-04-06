@@ -49,3 +49,6 @@ $("#msg-send-send").click(function() {
     });
     return false;
 });
+$("#msg-recv-reset").click(function(event) {
+    $("#msg-recv-content").empty();
+});

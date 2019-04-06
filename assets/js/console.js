@@ -1,6 +1,9 @@
 /* global variable begin */
 let drawing = false;
 let running = false;
+let started = false;
+let isOnline = true;
+let userType = "debug";
 let cheat_data = new Array();
 /* global variable end */
 
@@ -8,14 +11,29 @@ let cheat_data = new Array();
 let ws = new WebSocket('ws://127.0.0.1:1923/ws');
 
 ws.onmessage = function (message) {
+    console.log(message.data);
     let msg = JSON.parse(message.data);
-    console.log(msg);
     switch (msg.action) {
         case 'append-user':
             let username = msg.content.nickname;
             let uid = msg.content.uid;
             let avatarUrl = msg.content.avatar;
             auto_add_user(avatarUrl, username, uid);
+            break;
+        case 'initialize':
+            isOnline = (msg.content.online == "true");
+            userType = msg.content.userType;
+            console.log(isOnline, userType);
+            if (isOnline) {
+                $("#online-symbol").text("ONLINE");
+                $('.import-participants').attr("disabled", "true");
+            } else {
+                $("#online-symbol").text("OFFLINE");
+            }
+            break;
+        case 'who-is-lucky-dog':
+            show_lucky_dog(msg.content.nickname, msg.content.itemname);
+            console.log(msg.content.nickname + " gets " + msg.content.itemname);
             break;
         default:
             console.log('unknown action:\n' + msg.action);
@@ -57,7 +75,8 @@ function stop_draw() {
     $(".btn-draw-action").css("background-color", "#006400");
     $("#draw-action").attr("class", "mdi mdi-arrow-right-drop-circle-outline");
     ws.send(JSON.stringify({
-        action: 'stop-drawing'
+        action: 'stop-drawing',
+        content: ""
     }));
 }
 /* stop draw end */
@@ -72,19 +91,36 @@ function on_draw_btn_click() {
 /* activity button clicked begin */
 function on_activity_btn_click() {
     if (!running) {
-        $("#activity-label").text("结束活动");
+        $("#activity-label").text("隐藏活动");
         $(".btn-activity-action").css("background-color", "orangered");
         $("#activity-action").attr("class", "mdi mdi-stop-circle-outline");
-        $(".btn-draw-action").prop('disabled', false); 
+        $(".btn-draw-action").prop('disabled', false);
+        if (!started) {
+            var t = new Date();
+            var now = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate() + "-" + 
+            t.getHours() + "-" + t.getMinutes() + "-" + t.getSeconds();
+            ws.send(JSON.stringify({
+                action: 'activity-start-time',
+                content: now
+            }));
+            started = true;
+        }
+        ws.send(JSON.stringify({
+            action: 'show-activity',
+            content: ''
+        }));
     } else {
-        $("#activity-label").text("活动结束");
+        $("#activity-label").text("展示活动");
         $(".btn-activity-action").css("background-color", "#006400");
         $("#activity-action").attr("class", "mdi mdi-arrow-right-drop-circle-outline");
-        $(".btn-activity-action").prop('disabled', true); 
         $(".btn-draw-action").prop('disabled', true);
-        stop_draw();
+        if (drawing) stop_draw();
+        ws.send(JSON.stringify({
+            action: 'hide-activity',
+            content: ''
+        }));
     }
-    running = true;
+    running = !running;
 }
 /* activity button clicked end */
 
@@ -99,7 +135,7 @@ $.extend({
             title[y] = title[y].trim();
         }
         for (var i = 0; i < record.length; i++) {
-            var t = record[i].split(",");
+            var t = $.trim(record[i]).split(",");
             for (var y = 0; y < t.length; y++) {
                 if (!data[i]) data[i] = {};
                 data[i][title[y]] = t[y];
@@ -118,6 +154,9 @@ function import_participants() {
     var reader = new FileReader();
     reader.onload = function(f) {
         $('#parts').val($('#participants').val());
+        $('#participants').val("");
+        $("#parts-list-head").empty();
+        $("#parts-list-body").empty();
         $('.parts-label').addClass("active");
         var data = this.result;
         $(function() {
@@ -125,6 +164,14 @@ function import_participants() {
                 if (!data) return;
                 if (data && !data[0].hasOwnProperty('username')) {
                     for (var item in data[0]) console.log(item);
+                    runNotify({
+                        message: 'CSV必须包含username字段',
+                        messageTitle: 'title',
+                        levelMessage: 'warn',
+                        timer: '2000'
+                    });
+                    $('#parts').val("");
+                    $('#parts').blur();
                     return;
                 }
                 var head_str = "<tr>";
@@ -133,8 +180,15 @@ function import_participants() {
                 $("#parts-list-head").append(head_str + "</tr>");
                 for (var i = 0; i < data.length; ++i) {
                     var record_str = "<tr>";
-                    for (item in data[0])
-                        record_str += "<td>" + data[i][item] + "</td>"
+                    var content = {};
+                    for (item in data[0]) {
+                        record_str += "<td>" + data[i][item] + "</td>";
+                        content[item] = data[i][item];
+                    }
+                    ws.send(JSON.stringify({
+                        action: 'manual-import',
+                        content: content
+                    }));
                     $("#parts-list-body").append(record_str + "</tr>");
                 }
             });
@@ -175,12 +229,14 @@ var eCalendar = {
     function add_item() {
         if ($('input:focus').length != 0) return;
         if ($('#item-list-body').find("tr").length == 0 || $('#item-list-body tr:last').find('input.item-name').val()) {
+            var cheat_functions = `<div class="cfg-cheat table-icon" onclick="cfg_cheat(this)"><i class="mdi mdi-settings"></i></div>`
+            if (userType == "normal") cheat_functions = '';
             $("#item-list-body").append(`<tr>
             <td><input class="table-input item-name" style="margin-bottom: 0px;" type="text" onblur="check_content(this)"></input></td>
             <td><input readonly="readonly" style="margin-bottom: 0px; color: rgb(64, 77, 91);" ondrop="drop_prize(event)" ondragover="allowDrop(event)"></input></td>
             <td><input class="table-input" style="margin-bottom: 0px;" type="number" min="1" value="1"></input></td>
             <td class="icon-td">
-            <div class="cfg-cheat table-icon" onclick="cfg_cheat(this)"><i class="mdi mdi-settings"></i></div>
+            ` + cheat_functions + `
             <div class="del-item table-icon" onclick="del_item(this)"><i class="mdi mdi-trash-can-outline"></i></div>
             </td>
             </tr>`);
@@ -290,7 +346,7 @@ function get_items() {
 
 /* show luck dog begin */
 function show_lucky_dog(username, prizename) {
-    $("#lucky-list-body").append("<tr><td>" + username + "</td><td>" + prizename + "</td></tr>");
+    $("#lucky-list-body").append("<tr><td width='50%'>" + username + "</td><td width='50%'>" + prizename + "</td></tr>");
 }
 /* show luck dog end */
 
@@ -468,6 +524,16 @@ function quit_cheat_cfg() {
 }
 /* cheat function end */
 
+/* switch stage page begin */
+function switch_page() {
+    $("#page-name").text($(this).text());
+    ws.send(JSON.stringify({
+        action: "switch-page",
+        content: $("#page-name").text()
+    }));
+}
+/* switch stage page end */
+
 /* shotcut key functions begin */
 function global_keydown(e) { // global
 
@@ -597,6 +663,9 @@ $(document).ready(function () {
     /* cheat binding */
     $("#btn-add-winner").click(add_winner);
     $("#btn-add-loser").click(add_loser);
+
+    /* switch page binding */
+    $(".dropdown-item.page").click(switch_page);
 
     /* shotcut key map */
     document.onkeydown = global_keydown;

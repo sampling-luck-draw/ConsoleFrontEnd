@@ -1,23 +1,4 @@
-﻿@media (max-width: 768px) {
-    #setting-panel {
-        margin-left: 15px;
-        margin-top: 15px;
-    }
-    #left-panel-tab {
-        display: none;
-    }
-    .header {
-        position: fixed;
-        top: 0px;
-        width: 100%;
-        z-index: 2;
-    }
-    .main {
-        position: relative;
-        top: 7rem;
-    }
-}
-html {
+﻿html {
     height: 100%;
 }
 body {
@@ -33,6 +14,10 @@ body {
 }
 [class*="col-"] {
     padding-left: 0px;
+}
+#online-symbol {
+    color: wheat;
+    font-size: 1.25rem;
 }
 #menu {
     background-color: #00BCD4;
@@ -81,7 +66,7 @@ body {
 #setting-panel {
     border-radius: 0px;
     padding-top: 10px;
-    overflow: hidden;
+    overflow: auto;
 }
 #spy {
     min-height: 40%;
@@ -156,7 +141,7 @@ table.inline-table {
     margin-bottom: -2px !important;
 }
 .lucky-list {
-    margin-bottom: 20px;
+    height: calc(60% - 180px);
     overflow-y: auto;
 }
 .lucky-list::-webkit-scrollbar {
@@ -352,4 +337,36 @@ input[type=range]:focus {
 }
 #cheat-winner input, #cheat-loser input {
     cursor: text;
+}
+.dropdown-item:hover {
+    background-color: #cacaca;
+    cursor: pointer;
+}
+#switch-page {
+    width: 25%;
+    background-color: #00BCD4;
+    border-radius: 0px;
+    color: #ffffffb4;
+}
+#switch-page:hover {
+    color: #ffffffff;
+}
+@media (max-width: 768px) {
+    #setting-panel {
+        margin-left: 15px;
+        margin-top: 15px;
+    }
+    #left-panel-tab {
+        display: none;
+    }
+    .header {
+        position: fixed;
+        top: 0px;
+        width: 100%;
+        z-index: 2;
+    }
+    .main {
+        position: relative;
+        top: 7rem;
+    }
 }
