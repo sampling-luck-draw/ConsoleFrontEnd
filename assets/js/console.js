@@ -640,7 +640,15 @@ function update_setting(obj, event) {
 
 /* finish activity function begin */
 function finish_activity(obj, event) {
-
+    if (navigator.userAgent.indexOf("Firefox") != -1 || navigator.userAgent.indexOf("Chrome") !=-1) {
+        window.opener = null;
+        window.open("file:///C:/Users/MAC/Desktop/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/ConsoleFrontEnd/login.html", "_self");
+        window.close();
+    } else {
+        window.opener = null;
+        window.open("", "_self");
+        window.close();
+    }
 }
 /* finish activity function end */
 
@@ -740,7 +748,18 @@ function input_keydown(obj, event) { // input
 //-------------------------------bjz-end---------------------------------
 
 /* initialization and bindings */
-$(document).ready(function () {
+$(document).ready(function () {       
+
+    window.onbeforeunload = function(e) {
+        console.log('beforeunload');
+        return 1;
+    };
+
+    /* disable browser backward */
+    history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', function () {
+        history.pushState(null, null, document.URL);
+    });
 
     /* Import participants binding */
     $("#participants").change(import_participants);

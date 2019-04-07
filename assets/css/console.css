@@ -352,13 +352,12 @@ input[type=range]:focus {
     color: #ffffffff;
 }
 #finish-activity {
-    float: right;
+    width: 100%;
     background-color: #FF4500;
 }
 #update-setting {
-    float: right;
+    width: 100%;
     background-color: #006400;
-    margin-right: 1rem;
 }
 @media (max-width: 768px) {
     #setting-panel {

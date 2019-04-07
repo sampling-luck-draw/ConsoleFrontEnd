@@ -1,4 +1,9 @@
+let next_page = "file:///C:/Users/MAC/Desktop/软件工程/ConsoleFrontEnd/console.html";
 $(function() {
+    history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', function () {
+        history.pushState(null, null, document.URL);
+    });
     var storage = window.localStorage;
     var username = $("#username"),
         password = $('#password'),
@@ -6,7 +11,6 @@ $(function() {
     var localUser = storage.getItem('user') || '';
         localPass = storage.getItem('pass') || '';
     if (localUser !== '' && localPass !== '') {
-        $(".user-icon, .user-label, .pwd-icon, .pwd-label").addClass("active");
         username.val(localUser);
         password.val(localPass);
         check.attr('checked', 'true');
@@ -20,16 +24,32 @@ $(function() {
             storage.setItem('pass', '');
         }
     });
+    $("#offline").click(function() {
+        self.location.href = next_page;
+    });
     $("#login").click(function() {
         $("#login-form").ajaxSubmit({
+            // type: "POST",
+            // url: "http://localhost:1923/login",
+            // timeout : 1000,
+            // data: {
+            //     'username': $("#username").val(),
+            //     'password': $("#password").val()
+            // },
+            type: "POST",
+            url: "http://localhost:1923/post",
             timeout : 1000,
             data: {
-                'username': $("#username").val(),
-                'password': $("#password").val()
+                    action: "login",
+                    content: JSON.stringify({
+                        'username': $("#username").val(),
+                        'password': $("#password").val()
+                    })
             },
             success: function(data) {
-                if (data.success === "true") {
-                    self.location.href = "console.html";
+                var res = JSON.parse(data);
+                if (res.success === "true") {
+                    self.location.href = next_page;
                 } else {
                     $(".log-bar").text("用户名或密码错误");
                 }
