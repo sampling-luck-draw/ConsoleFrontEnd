@@ -2,6 +2,7 @@
 + go后台限制只能本机登录控制台，控制台给出弹幕审核管理员密码
 + 弹幕审核页面要单独做
 + post和websocket的URL可能需要修改
++ username是唯一标识，应该对应微信号而不是nickname
 
 ### 2 接口说明文档
 #### 2.1 登录界面
@@ -12,7 +13,7 @@ POST {
 }
 
 RETURN {
-    "success": "true" or "false"
+    "success": "true" // or "false"
 }
 ```
 #### 2.2 开始界面
@@ -33,14 +34,15 @@ RETURN {
 {
     "action": "initialize",
     "content": {
-        "online": "true" or "false",
-        "userType": "vip" or "normal" or "debug"
+        "online": "true", // or "false"
+        "userType": "vip" // or "normal" or "debug"
     }
 }
 // 发送中奖人和中奖项
 {
     "action": "who-is-lucky-dog",
     "content": {
+        "uid": "1234567890",
         "nickname": "Yeah...",
         "itemname": "一等奖"
     }
@@ -92,6 +94,15 @@ RETURN {
 {
     "action":"stop-drawing",
     "content":""
+}
+// 中奖无效
+{
+    "action":"disable-lucky",
+    "content":{
+        "itemname":"一等奖",
+        "uid":"1234567890",
+        "username":"Yeah..."
+    }
 }
 ```
 #### 2.4 弹幕审核界面

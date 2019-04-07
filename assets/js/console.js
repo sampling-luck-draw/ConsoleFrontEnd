@@ -32,8 +32,8 @@ ws.onmessage = function (message) {
             }
             break;
         case 'who-is-lucky-dog':
-            show_lucky_dog(msg.content.nickname, msg.content.itemname);
-            console.log(msg.content.nickname + " gets " + msg.content.itemname);
+            show_lucky_dog(msg.content.uid, msg.content.nickname, msg.content.itemname);
+            console.log(msg.content.uid + "-" + msg.content.nickname + " gets " + msg.content.itemname);
             break;
         default:
             console.log('unknown action:\n' + msg.action);
@@ -397,11 +397,51 @@ function get_items() {
 }
 /* get lucky draw items for choice end*/
 
-/* show luck dog begin */
-function show_lucky_dog(username, prizename) {
-    $("#lucky-list-body").append("<tr><td width='50%'>" + username + "</td><td width='50%'>" + prizename + "</td></tr>");
+/* show lucky dog begin */
+function show_lucky_dog(uid, username, itemname) {
+    $("#lucky-list-body").append(`<tr><td width="45%" class="username" uid="` + uid +
+    `">` + username + `</td><td width="40%" class="itemname">` + itemname +
+    `<td class="icon-td" width="15%">
+        <div class="disable-lucky table-icon" onclick="disable_lucky(this, event)">
+            <i class="mdi mdi-account-remove"></i>
+        </div>
+    </td>`);
 }
-/* show luck dog end */
+    /* disable lucky dog begin */
+    function disable_lucky(obj, event) {
+        var $tr = $(obj).parent().parent();
+        var $user = $tr.find("td.username");
+        var username = $user.text();
+        var uid = $user.attr("uid");
+        var itemname = $tr.find("td.itemname").text();
+        ws.send(JSON.stringify({
+            action: "disable-lucky",
+            content: {
+                uid: uid,
+                username: username,
+                itemname: itemname
+            }
+        }));
+        del_row(obj);
+        // add user to cheat-loser table
+        if (userType != "normal") {
+            $('#item-list-body').find("tr").each(function(index, element) {
+                if ($(this).find("input.item-name").val() == itemname) {
+                    if (!(itemname in cheat_data)) cheat_data[itemname] = {winner: [], loser: []};
+                    var hasAlready = false;
+                    for (var i = 0; i < cheat_data[itemname].loser.length; i++) {
+                        if (cheat_data[itemname].loser[i] == username) {
+                            hasAlready = true;
+                            break;
+                        }
+                    }
+                    if (!hasAlready) cheat_data[itemname].loser.push(username);
+                }
+            });
+        }
+    }
+    /* disable lucky dog end */
+/* show lucky dog end */
 
 /* cheat function begin */
 function cfg_cheat(obj) {

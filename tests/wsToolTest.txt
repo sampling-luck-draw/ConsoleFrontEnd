@@ -21,6 +21,7 @@
 {
     "action": "who-is-lucky-dog",
     "content": {
+        "uid": "1234567890",
         "nickname": "Yeah...",
         "itemname": "一等奖"
     }
@@ -72,4 +73,13 @@
 {
     "action":"stop-drawing",
     "content":""
+}
+// 中奖无效
+{
+    "action":"disable-lucky",
+    "content":{
+        "itemname":"一等奖",
+        "uid":"1234567890",
+        "username":"Yeah..."
+    }
 }
