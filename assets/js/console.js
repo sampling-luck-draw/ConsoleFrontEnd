@@ -150,7 +150,7 @@ $.extend({
 /* import participants begin */
 function import_participants() {
     var file = document.getElementById("participants").files[0];
-    var fileName = file.name.substring(0, file.name.lastIndexOf('.'));
+    // var fileName = file.name.substring(0, file.name.lastIndexOf('.'));
     var reader = new FileReader();
     reader.onload = function(f) {
         $('#parts').val($('#participants').val());
@@ -197,6 +197,59 @@ function import_participants() {
     reader.readAsText(file);
 }
 /* import participants end */
+
+/* import background image begin */
+function getObjectURL(file) {
+    var url = null;   
+    if (window.createObjectURL !== undefined) { // basic  
+        url = window.createObjectURL(file);  
+    } else if (window.URL !== undefined) { // mozilla(firefox)  
+        url = window.URL.createObjectURL(file);  
+    } else if (window.webkitURL !== undefined) { // webkit or chrome  
+        url = window.webkitURL.createObjectURL(file);  
+    }  
+    return url;
+}
+function converImgTobase64(url, callback, outputFormat) {
+    var canvas = document.createElement('CANVAS'),
+    ctx = canvas.getContext('2d'),
+        img = new Image;
+    img.crossOrigin = 'Anonymous';
+    img.onload = function() {
+        canvas.height = img.height;
+        canvas.width = img.width;
+        ctx.drawImage(img,0,0);
+        var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+        callback.call(this, dataURL);
+        canvas = null; 
+    };
+    img.src = url;
+}
+function import_bg_image() {
+    var input = $("#background-img")[0],
+    src = getObjectURL(input.files[0]);
+    // src = input.files[0];
+    // var src = document.getElementById("background-img").files[0];
+    console.log("src: ", src);
+    converImgTobase64(src, function(base64Str) {
+        $.ajax({ 
+            type: "POST",
+            // url: "http://localhost:1923/bg-img",
+            url: "http://localhost:1923/post", // for debug
+            data: {
+                action: "background-image",
+                content: base64Str
+            },
+            success: function(result) {
+                console.log("send image: " + result);
+            } 
+        });
+    });
+    $('.bg-img-label').addClass("active");
+    $('#bg-img').val($('#background-img').val());
+    $('#background-img').val("");
+}
+/* import background image end */
 
 /* ecalendar plugin initialize begin */
 var eCalendar = {
@@ -639,6 +692,11 @@ $(document).ready(function () {
     $("#start-time").ECalendar(eCalendar);
     $("#end-time").ECalendar(eCalendar);
 
+    /* font-family list initialize */ // must before select input init
+    $("#font-family option").each(function() {
+        $(this).css("font-family", $(this).val());
+    });
+
     /* select input plugin initialization */
     $('.form-control-chosen').chosen();
 
@@ -666,6 +724,9 @@ $(document).ready(function () {
 
     /* switch page binding */
     $(".dropdown-item.page").click(switch_page);
+
+    /* import background image binding */
+    $("#background-img").change(import_bg_image);
 
     /* shotcut key map */
     document.onkeydown = global_keydown;

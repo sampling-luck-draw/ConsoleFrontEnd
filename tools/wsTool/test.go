@@ -12,6 +12,11 @@ type TestReturn struct {
 	Success string `json:"success"`
 }
 
+type Message struct {
+	Action  string `json:"action"`
+	Content string `json:"content"`
+}
+
 var console_ws, recv_ws *websocket.Conn
 
 func console(ws *websocket.Conn) {
@@ -60,8 +65,29 @@ func send(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func post(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "null")
+	w.WriteHeader(200)
+	if r.Method == "POST" {
+		action := r.PostFormValue("action")
+		content := r.PostFormValue("content")
+		res_struct := TestReturn{
+			Success: "true",
+		}
+		res, _ := json.Marshal(res_struct)
+		fmt.Fprint(w, string(res))
+		recv_data := Message{
+			Action:  action,
+			Content: content,
+		}
+		fmt.Println(recv_data)
+		websocket.JSON.Send(recv_ws, recv_data)
+	}
+}
+
 func main() {
 	http.HandleFunc("/send", send)
+	http.HandleFunc("/post", post)
 	http.Handle("/ws", websocket.Handler(console))
 	http.Handle("/recv", websocket.Handler(recv))
 	err := http.ListenAndServe(":1923", nil)

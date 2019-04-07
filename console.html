@@ -218,8 +218,8 @@
                                     <thead id="item-list-head">
                                         <tr>
                                             <th width="35%">奖项名称</th>
-                                            <th width="40%">对应奖品</th>
-                                            <th width="10%">数量</th>
+                                            <th width="35%">对应奖品</th>
+                                            <th width="15%">数量</th>
                                             <th width="15%"></th>
                                         </tr>
                                     </thead>
@@ -244,6 +244,38 @@
                             <input class="minicolors" id="show-style" type="text">
                             <label for="show-style" class="active">主题颜色</label>
                         </div>
+                        <div class="input-field col-md-6">
+                            <select id="draw-music" class="form-control form-control-chosen">
+                                <option value="haorizi">好日子</option>
+                                <option value="haoyunlai">好运来</option>
+                            </select>
+                            <label class="active">抽奖音效</label>
+                        </div>
+                        <div class="input-field col-md-6">
+                            <div class="row" style="margin-top: -25px;">
+                                <div class="input-field col-md-9">
+                                    <input id="bg-img" type="text" autocomplete="off">
+                                    <label for="bg-img" class="bg-img-label">背景图片</label>
+                                </div>
+                                <div class="col-md-3" style="padding-right: 0;">
+                                    <button class="btn btn-info " onclick="$('#background-img').click();" 
+                                    style="position: absolute; bottom: 20px; width: calc(100% - 15px);">本地上传</button>
+                                </div>
+                            </div>
+                            <input type="file" id='background-img' accept="image/png, image/jpeg" style="display: none">
+                        </div>
+                        <div class="input-field col-md-6">
+                            <select id="lucky-music" class="form-control form-control-chosen">
+                                <option value="bingo">Bingo</option>
+                            </select>
+                            <label class="active">中奖音效</label>
+                        </div>
+                        <div class="input-field col-md-6">
+                            <select id="reward-music" class="form-control form-control-chosen">
+                                <option value="laciji">拉次基进行曲</option>
+                            </select>
+                            <label class="active">领奖音效</label>
+                        </div>
                     </div>
                 </div>
                 <div class="container tab-pane fade" id="danmu-sets">
@@ -264,35 +296,40 @@
                     <div class="row" style="margin-top: 15px;">
                         <div class="input-field col-md-6">
                             <select id="font-family" class="form-control form-control-chosen">
-                                <option value="1">Arial</option>
-                                <option value="2">Comic Sans</option>
-                                <option value="3">Courier New</option>
+                                <option value="SimHei">黑体</option>
+                                <option value="SimSun">宋体</option>
+                                <option value="NSimSun">新宋体</option>
+                                <option value="FangSong">仿宋</option>
+                                <option value="KaiTi">楷体</option>
+                                <option value="FangSong_GB2312">仿宋_GB2312</option>
+                                <option value="KaiTi_GB2312">楷体_GB2312</option> 
+                                <option value="Microsoft YaHei">微软雅黑体</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Comic Sans">Comic Sans</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Times New Roman">Times New Roman</option>
                             </select>
                             <label class="active">弹幕字体</label>
                         </div>
-                        <div class="input-field col-md-6">
-                            <select id="font-color" class="form-control form-control-chosen">
-                                <option value="1">Black</option>
-                                <option value="2">White</option>
-                                <option value="3">Yellow</option>
-                            </select>
-                            <label class="active">弹幕颜色</label>
-                        </div>
+                            <div class="input-field col-md-6" style="margin-top: 5px;">
+                                <input class="minicolors" id="font-color" type="text">
+                                <label for="font-color" class="active">弹幕颜色</label>
+                            </div>
                     </div>
                     <div class="row" style="margin-top: 15px;">
                         <div class="input-field col-md-6">
                             <select id="danmu-speed" class="form-control form-control-chosen">
-                                <option value="1">Slow</option>
-                                <option value="2">Normal</option>
-                                <option value="3">Fast</option>
+                                <option value="slow">缓慢</option>
+                                <option value="normal">正常</option>
+                                <option value="fast">快速</option>
                             </select>
                             <label class="active">弹幕速度</label>
                         </div>
                         <div class="input-field col-md-6">
                             <select id="danmu-position" class="form-control form-control-chosen">
-                                <option value="1">Top</option>
-                                <option value="2">Middle</option>
-                                <option value="3">Bottom</option>
+                                <option value="top">顶部</option>
+                                <option value="middle">中间</option>
+                                <option value="bottom">底部</option>
                             </select>
                             <label class="active">弹幕位置</label>
                         </div>
