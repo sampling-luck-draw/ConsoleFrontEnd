@@ -104,6 +104,17 @@ RETURN {
         "username":"Yeah..."
     }
 }
+// 背景图片POST，JSON内容在data中
+// base64Str这里会是一个很长的字符串
+// 服务器收到后应返回 { "success": "true" }
+{ 
+    "type": "POST",
+    "url": "http://localhost:1923/bg-img",
+    "data": {
+        "action": "background-image",
+        "content": // base64Str
+    },
+}
 ```
 #### 2.4 弹幕审核界面
 ### 3 前端描述文档

@@ -627,6 +627,23 @@ function switch_page() {
 }
 /* switch stage page end */
 
+/* update settings function begin */
+function update_setting(obj, event) {
+    runNotify({
+        message: '已成功更新同步',
+        messageTitle: 'title',
+        levelMessage: 'info',
+        timer: '2000'
+    });
+}
+/* update settings function end */
+
+/* finish activity function begin */
+function finish_activity(obj, event) {
+
+}
+/* finish activity function end */
+
 /* shotcut key functions begin */
 function global_keydown(e) { // global
 

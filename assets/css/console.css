@@ -351,6 +351,15 @@ input[type=range]:focus {
 #switch-page:hover {
     color: #ffffffff;
 }
+#finish-activity {
+    float: right;
+    background-color: #FF4500;
+}
+#update-setting {
+    float: right;
+    background-color: #006400;
+    margin-right: 1rem;
+}
 @media (max-width: 768px) {
     #setting-panel {
         margin-left: 15px;
