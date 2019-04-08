@@ -3,7 +3,11 @@ let drawing = false;
 let running = false;
 let started = false;
 let isOnline = true;
+let $cur_item = new Object();
 let userType = "debug";
+let max_winner = 1;
+let cur_draw_times = 0;
+let max_draw_times = 1;
 let cheat_data = new Array();
 /* global variable end */
 
@@ -26,7 +30,7 @@ ws.onmessage = function (message) {
             console.log(isOnline, userType);
             if (isOnline) {
                 $("#online-symbol").text("ONLINE");
-                $('.import-participants').attr("disabled", "true");
+                $('.import-participants').attr("disabled", true);
             } else {
                 $("#online-symbol").text("OFFLINE");
             }
@@ -51,7 +55,6 @@ $(".input-field input").on('blur', function() {
 });
 /* input style implement end */
 
-// TODO
 function auto_add_user(img_url, username, uid) {
     $("#parts-list-head").html("<tr><td>头像</td><td>用户名</td><td>UID</td></tr>");
     $("#parts-list-body").append("<tr><td>" + "<img width='60px' height='60px' src='" + img_url + "'/></td><td>" + username + "</td><td>" + uid + "</td></tr>");
@@ -62,6 +65,19 @@ function start_draw() {
     $("#draw-label").text("停止抽奖");
     $(".btn-draw-action").css("background-color", "orangered");
     $("#draw-action").attr("class", "mdi mdi-stop-circle-outline");
+    // 禁用抽奖作弊功能
+    if (userType != "normal") $cur_item.find(".cfg-cheat").attr("disabled", true);
+    // 禁用抽奖数量设置
+    $cur_item.find(".max_winner").attr("readonly", "readonly");
+    // 禁用奖项列表中的奖品设置
+    $cur_item.find(".item-prize").addClass("disable");
+    runNotify({
+        message: $cur_item.find(".item-name").val() + "第" + (cur_draw_times + 1)
+        + "次抽奖，剩余" + (max_draw_times - cur_draw_times - 1) + "次",
+        messageTitle: 'title',
+        levelMessage: 'info',
+        timer: '2500'
+    });
     ws.send(JSON.stringify({
         action: 'start-drawing',
         content: {'dkind': $("#draw-style").val()}
@@ -74,6 +90,16 @@ function stop_draw() {
     $("#draw-label").text("开始抽奖");
     $(".btn-draw-action").css("background-color", "#006400");
     $("#draw-action").attr("class", "mdi mdi-arrow-right-drop-circle-outline");
+    // 启用抽奖作弊功能
+    if (userType != "normal") $cur_item.find(".cfg-cheat").attr("disabled", false);
+    // 启用抽奖数量设置
+    $cur_item.find(".max_winner").removeAttr("readonly");
+    // 启用奖项列表中的奖品设置
+    $cur_item.find(".item-prize").removeClass("disable");
+    cur_draw_times ++;
+    if (cur_draw_times == max_draw_times) {
+        $(".btn-draw-action").prop("disabled", true);
+    }
     ws.send(JSON.stringify({
         action: 'stop-drawing',
         content: ""
@@ -94,7 +120,13 @@ function on_activity_btn_click() {
         $("#activity-label").text("隐藏活动");
         $(".btn-activity-action").css("background-color", "orangered");
         $("#activity-action").attr("class", "mdi mdi-stop-circle-outline");
-        $(".btn-draw-action").prop('disabled', false);
+        max_draw_times = parseInt($cur_item.find(".max_winner").val()); // 当前奖项的最大可抽次数
+        console.log("max_draw_times: ", max_draw_times);
+        $cur_item.find("input.item-name").attr("readonly", "readonly"); // 禁用当前奖项在列表中改名
+        $cur_item.find(".del-item").attr("disabled", true); // 禁用当前奖项在列表中的删除
+        cur_draw_times = 0; // 初始化已抽奖次数为0
+        $(".btn-draw-action").prop('disabled', false); // 启用开始抽奖按钮
+        $("#cur-item-input").attr("disabled", true); // 禁用输入当前奖项
         if (!started) {
             var t = new Date();
             var now = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate() + "-" + 
@@ -114,6 +146,19 @@ function on_activity_btn_click() {
         $(".btn-activity-action").css("background-color", "#006400");
         $("#activity-action").attr("class", "mdi mdi-arrow-right-drop-circle-outline");
         $(".btn-draw-action").prop('disabled', true);
+        // 清空并启用输入当前奖项
+        $("#cur-item-input").val("");
+        $("#cur-item-input").blur();
+        $("#cur-item-input").attr("disabled", false);
+        // 启用奖项列表的删除对应项功能
+        $cur_item.find(".del-item").attr("disabled", false);
+        // 禁用抽奖作弊功能
+        if (userType != "normal") $cur_item.find(".cfg-cheat").attr("disabled", true);
+        // 禁用抽奖数量设置
+        $cur_item.find(".max_winner").attr("readonly", "readonly");
+        // 禁用奖项列表中的奖品设置
+        $cur_item.find(".item-prize").addClass("disable");
+        $(".btn-activity-action").prop("disabled", true);
         if (drawing) stop_draw();
         ws.send(JSON.stringify({
             action: 'hide-activity',
@@ -236,10 +281,13 @@ function import_bg_image() {
             type: "POST",
             // url: "http://localhost:1923/bg-img",
             url: "http://localhost:1923/post", // for debug
-            data: {
+            dataType: "json",
+            data: JSON.stringify({
                 action: "background-image",
-                content: base64Str
-            },
+                content: {
+                    base64Str: base64Str
+                }
+            }),
             success: function(result) {
                 console.log("send image: " + result);
             } 
@@ -285,9 +333,9 @@ var eCalendar = {
             var cheat_functions = `<div class="cfg-cheat table-icon" onclick="cfg_cheat(this)"><i class="mdi mdi-settings"></i></div>`
             if (userType == "normal") cheat_functions = '';
             $("#item-list-body").append(`<tr>
-            <td><input class="table-input item-name" style="margin-bottom: 0px;" type="text" onblur="check_content(this)"></input></td>
-            <td><input readonly="readonly" style="margin-bottom: 0px; color: rgb(64, 77, 91);" ondrop="drop_prize(event)" ondragover="allowDrop(event)"></input></td>
-            <td><input class="table-input" style="margin-bottom: 0px;" type="number" min="1" value="1"></input></td>
+            <td><input class="table-input item-name" type="text" onblur="check_content(this)"></input></td>
+            <td><input class="item-prize" readonly="readonly" ondrop="drop_prize(event)" ondragover="allowDrop(event)"></input></td>
+            <td><input class="table-input max_winner" type="number" min="1" value="1"></input></td>
             <td class="icon-td">
             ` + cheat_functions + `
             <div class="del-item table-icon" onclick="del_item(this)"><i class="mdi mdi-trash-can-outline"></i></div>
@@ -296,10 +344,32 @@ var eCalendar = {
             $(".table-input").attr("onkeydown", "input_keydown(this, event)");
             $(".cfg-cheat").attr("onmouseover", "show_cheat_info(this, event)");
             $(".cfg-cheat").attr("onmouseout", "hide_cheat_info(this, event)");
+            $(".max_winner").attr("onchange", "update_max_draw_times(this, event)");
         }
         $('#item-list-body tr:last').find('input.item-name').focus();
     }
     /* add an item end */
+
+    /* update max_draw_times begin */
+    function update_max_draw_times(obj, event) {
+        if (running && $(obj).parent().parent().find("input.item-name").val() ==
+            $cur_item.find("input.item-name").val()) {
+            if (max_draw_times == cur_draw_times && parseInt($(obj).val()) > max_draw_times) {
+                $(".btn-draw-action").prop("disabled", false);
+            } else if (parseInt($(obj).val()) < cur_draw_times) {
+                $(obj).val(cur_draw_times);
+                runNotify({
+                    message: '数量不得小于已进行抽奖次数',
+                    messageTitle: 'title',
+                    levelMessage: 'warn',
+                    timer: '2000'
+                });
+            }
+            max_draw_times = $(obj).val();
+            console.log("max_draw_times updated to: ", max_draw_times);
+        }
+    }
+    /* update max_draw_times end */
 
     /* check new item content begin */
     function check_content(obj) {
@@ -335,6 +405,11 @@ var eCalendar = {
 
     /* delete an item begin */
     function del_item(obj) {
+        if ($(obj).attr("disabled")) {
+            console.log("delete disabled");
+            return;
+        }
+        console.log("delete an item");
         var item_name = $(obj).parent().parent().find(".item-name").val();
         if (item_name != '' && item_name in cheat_data) {
             delete cheat_data[item_name];
@@ -349,6 +424,7 @@ var eCalendar = {
         event.dataTransfer.setData("Text", event.target.value);
     }
     function drop_prize(event) {
+        if ($(event.target).hasClass("disable")) return;
         event.preventDefault();
         var data = event.dataTransfer.getData("Text");
         event.target.value = data;
@@ -375,12 +451,17 @@ $.fn.RangeSlider = function() {
 
 /* get lucky draw items for choice begin*/
 function get_items() {
+    if ($(this).attr("disabled")) {
+        console.log("current item input disabled");
+        $(this).blur();
+        return;
+    }
     $(this).val("");
     var items = "";
     $("#item-list-body tr").each(function() {
-        var text = $(this).children("td:first").find("input").val();
-        if (text) {
-            items += '<option value="' + text + '" />';
+        var $input = $(this).children("td:first").find("input");
+        if ($input.val() && typeof($input.attr("readonly")) == "undefined") {
+            items += '<option value="' + $input.val() + '" />';
         }
     });
     if (items == "") {
@@ -396,6 +477,23 @@ function get_items() {
     return false;
 }
 /* get lucky draw items for choice end*/
+
+/* check current item begin */
+function check_cur_item() {
+    var cur_itemname = $(this).val();
+    if (cur_itemname != "") {
+        $('#item-list-body').find("tr").each(function(index, element) {
+            if ($(this).find("input.item-name").val() == cur_itemname) {
+                $cur_item = $(this);
+                console.log("Get global variable $cur_item: ", $cur_item);
+            }
+        });
+        $(".btn-activity-action").prop('disabled', false);
+    } else {
+        $(".btn-activity-action").prop('disabled', true);
+    }
+}
+/* check current item end */
 
 /* show lucky dog begin */
 function show_lucky_dog(uid, username, itemname) {
@@ -445,7 +543,12 @@ function show_lucky_dog(uid, username, itemname) {
 
 /* cheat function begin */
 function cfg_cheat(obj) {
+    if ($(obj).attr("disabled")) {
+        console.log("cfg-cheat disabled");
+        return;
+    }
     var item_name = $(obj).parent().parent().find(".item-name").val();
+    max_winner = $(obj).parent().parent().find(".max_winner").val();
     $("#cheat-kind").text(item_name);
     if (item_name in cheat_data) {
         cheat_data[item_name].winner.forEach(function(value, i) {
@@ -465,6 +568,10 @@ function cfg_cheat(obj) {
     $(".modal").modal('show');
 }
 function show_cheat_info(obj, event) {
+    if ($(obj).attr("disabled")) {
+        console.log("show_cheat_info disabled");
+        return;
+    }
     // console.log("hover");
     var max_len = 3;
     var item_name = $(obj).parent().parent().find(".item-name").val();
@@ -550,7 +657,6 @@ function check_cheat_content(obj) {
     });
     return true;
 }
-let max_winner = 1;
 function add_winner() {
     if ($('input:focus').length != 0) return;
     if ($("#cheat-winner").find("tr").length >= max_winner) {
@@ -789,6 +895,7 @@ $(document).ready(function () {
 
     /* automatically get item when click cur-item-input */
     $("#cur-item-input").on('focus', get_items);
+    $("#cur-item-input").on('blur', check_cur_item);
 
     /* draw and activity button clicked */
     $(".btn-draw-action").click(on_draw_btn_click);
@@ -806,5 +913,5 @@ $(document).ready(function () {
 
     /* shotcut key map */
     document.onkeydown = global_keydown;
-    $("#cur-item-input").keydown(input_keydown);
+    $("#cur-item-input").attr("onkeydown", "input_keydown(this, event)");
 });

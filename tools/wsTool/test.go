@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"golang.org/x/net/websocket"
@@ -13,8 +14,8 @@ type TestReturn struct {
 }
 
 type Message struct {
-	Action  string `json:"action"`
-	Content string `json:"content"`
+	Action  string                 `json:"action"`
+	Content map[string]interface{} `json:"content"`
 }
 
 var console_ws, recv_ws *websocket.Conn
@@ -69,17 +70,14 @@ func post(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "null")
 	w.WriteHeader(200)
 	if r.Method == "POST" {
-		action := r.PostFormValue("action")
-		content := r.PostFormValue("content")
 		res_struct := TestReturn{
 			Success: "true",
 		}
 		res, _ := json.Marshal(res_struct)
 		fmt.Fprint(w, string(res))
-		recv_data := Message{
-			Action:  action,
-			Content: content,
-		}
+		body, _ := ioutil.ReadAll(r.Body)
+		recv_data := Message{}
+		json.Unmarshal(body, &recv_data)
 		fmt.Println(recv_data)
 		websocket.JSON.Send(recv_ws, recv_data)
 	}

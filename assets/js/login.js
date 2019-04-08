@@ -1,4 +1,21 @@
 let next_page = "file:///C:/Users/MAC/Desktop/软件工程/ConsoleFrontEnd/console.html";
+let cloud_url = "https://sampling.alphamj.cn/signin";
+let local_url = "http://localhost:1923/post";
+
+function inform_local(isOnline, uid) {
+    $.ajax({
+        type: "POST",
+        url: local_url,
+        dataType: "json",
+        data: JSON.stringify({
+            "action": "login",
+            "content": {
+                online: isOnline
+            }
+        })
+    });
+}
+
 $(function() {
     history.pushState(null, null, document.URL);
     window.addEventListener('popstate', function () {
@@ -25,33 +42,28 @@ $(function() {
         }
     });
     $("#offline").click(function() {
+        inform_local("false");
         self.location.href = next_page;
     });
     $("#login").click(function() {
-        $("#login-form").ajaxSubmit({
-            // type: "POST",
-            // url: "http://localhost:1923/login",
-            // timeout : 1000,
-            // data: {
-            //     'username': $("#username").val(),
-            //     'password': $("#password").val()
-            // },
+        $.ajax({
             type: "POST",
-            url: "http://localhost:1923/post",
-            timeout : 1000,
-            data: {
-                    action: "login",
-                    content: JSON.stringify({
-                        'username': $("#username").val(),
-                        'password': $("#password").val()
-                    })
-            },
+            url: cloud_url,
+            timeout: 1000,
+            dataType : "json",
+            data: JSON.stringify({
+                username: $("#username").val(),
+                password: $("#password").val()
+            }),
             success: function(data) {
-                var res = JSON.parse(data);
-                if (res.success === "true") {
+                console.log(data);
+                if (data.result == "success") {
+                    console.log("uid: ", data.uid);
+                    inform_local("true");
                     self.location.href = next_page;
-                } else {
+                } else if (data.result == "error") {
                     $(".log-bar").text("用户名或密码错误");
+                    console.log("message: ", data.msg);
                 }
             },
             complete: function(XMLHttpRequest, status) {

@@ -54,10 +54,13 @@ ws.send(JSON.stringify({
 $.ajax({
 	type: "POST",
 	url: "http://localhost:1923/post",
-	data: {
+	data: JSON.stringify({
 		action: "background-image",
-		content: base64Str
-	},
+		dataType: "json",
+		content: {
+            "base64Str": base64Str
+        }
+	}),
 	success: function(result) {
 		console.log("send image: " + result);
 	}

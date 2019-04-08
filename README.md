@@ -7,19 +7,27 @@
 
 ### 2 接口说明文档
 #### 2.1 登录界面
-```json
+```plain
+/* 前端发往后台 */
 POST {
-    "username": "a string",
-    "password": "a string"
+    "action": "login",
+    "content": {
+        "online": "true" or "false"
+    }
 }
 
-RETURN {
-    "success": "true" // or "false"
+/* 前端发往云端 */
+URL: https://sampling.alphamj.cn/signin
+POST {
+    "username": "用户名", 
+    "password": "密码"
 }
+RETURN {"result": "success", "uid": user.id}
+or RETURN {"result": "error", "msg": "相应的错误信息"}
 ```
 #### 2.2 开始界面
 #### 2.3 控制台界面
-```json
+```plain
 /* 后台发往前端 */
 
 // 用户信息
@@ -108,12 +116,14 @@ RETURN {
 // 背景图片POST，JSON内容在data中
 // base64Str这里会是一个很长的字符串
 // 服务器收到后应返回 { "success": "true" }
-{ 
+POST { 
     "type": "POST",
     "url": "http://localhost:1923/bg-img",
     "data": {
         "action": "background-image",
-        "content": // base64Str
+        "content": {
+            "base64Str": "a long string"
+        }
     },
 }
 ```

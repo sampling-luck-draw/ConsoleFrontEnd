@@ -305,6 +305,12 @@ input[type=range]:focus {
     animation: fadeIn 0.2s;
 	-webkit-animation: fadeIn 0.2s;
 }
+.item-name, .item-prize, .max_winner {
+    margin-bottom: 0px;
+}
+.item-prize {
+    color: rgb(64, 77, 91);
+}
 @keyframes fadeIn {
 	0%   {opacity: 0;}
 	25%  {opacity: 0.25;}
@@ -359,6 +365,27 @@ input[type=range]:focus {
     width: 100%;
     background-color: #006400;
 }
+/* disabled elements' styles begin */
+.table-icon[disabled="disabled"] i {
+    color: #21252966;
+    cursor: default;
+}
+.item-prize.disable, .item-name[readonly="readonly"], 
+.max_winner[readonly="readonly"] {
+    color: #21252966;
+}
+.item-prize.disable:hover, .item-name[readonly="readonly"]:hover, 
+.max_winner[readonly="readonly"]:hover {
+    border-bottom: #ffffff solid 1px;
+}
+.item-prize.disable:focus, .item-name[readonly="readonly"]:focus,
+.max_winner[readonly="readonly"]:focus {
+    border-bottom: #ffffff solid 1px;
+    box-shadow: none;
+}
+
+/* disabled elements' styles end */
+
 @media (max-width: 768px) {
     #setting-panel {
         margin-left: 15px;
