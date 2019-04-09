@@ -1,4 +1,5 @@
 /* global variable begin */
+let login_url = "file:///C:/Users/MAC/Desktop/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/ConsoleFrontEnd/login.html";
 let drawing = false;
 let running = false;
 let started = false;
@@ -63,7 +64,7 @@ function auto_add_user(img_url, username, uid) {
 /* start draw begin */
 function start_draw() {
     $("#draw-label").text("停止抽奖");
-    $(".btn-draw-action").css("background-color", "orangered");
+    $(".btn-draw-action").css("background-color", "#dc3545");
     $("#draw-action").attr("class", "mdi mdi-stop-circle-outline");
     // 禁用抽奖作弊功能
     if (userType != "normal") $cur_item.find(".cfg-cheat").attr("disabled", true);
@@ -88,7 +89,7 @@ function start_draw() {
 /* stop draw begin */
 function stop_draw() {
     $("#draw-label").text("开始抽奖");
-    $(".btn-draw-action").css("background-color", "#006400");
+    $(".btn-draw-action").css("background-color", "##28a745");
     $("#draw-action").attr("class", "mdi mdi-arrow-right-drop-circle-outline");
     // 启用抽奖作弊功能
     if (userType != "normal") $cur_item.find(".cfg-cheat").attr("disabled", false);
@@ -118,7 +119,7 @@ function on_draw_btn_click() {
 function on_activity_btn_click() {
     if (!running) {
         $("#activity-label").text("隐藏活动");
-        $(".btn-activity-action").css("background-color", "orangered");
+        $(".btn-activity-action").css("background-color", "#dc3545");
         $("#activity-action").attr("class", "mdi mdi-stop-circle-outline");
         max_draw_times = parseInt($cur_item.find(".max_winner").val()); // 当前奖项的最大可抽次数
         console.log("max_draw_times: ", max_draw_times);
@@ -565,7 +566,7 @@ function cfg_cheat(obj) {
         });
         $(".table-input").attr("onkeydown", "input_keydown(this, event)");
     }
-    $(".modal").modal('show');
+    $("#cheat-modal").modal('show');
 }
 function show_cheat_info(obj, event) {
     if ($(obj).attr("disabled")) {
@@ -717,7 +718,7 @@ function save_cheat_info() {
     quit_cheat_cfg();
 }
 function quit_cheat_cfg() {
-    $(".modal").modal('hide');
+    $("#cheat-modal").modal('hide');
     $("#cheat-winner").empty();
     $("#cheat-loser").empty();
 }
@@ -735,6 +736,41 @@ function switch_page() {
 
 /* update settings function begin */
 function update_setting(obj, event) {
+    var href = $("#page-swichbar").find(".active").attr("href");
+    var content = {"part": href};
+    if (href == "#basic-info") {
+        content['activity-name'] = $("#activity-name").val();
+        console.log("update #basic-info");
+    } else if (href == "#prize-pool") {
+        content['draw-mode'] = $("#draw-mode").val();
+        console.log("update #prize-pool");
+    } else if (href == "#style-theme") {
+        content['draw-style'] = $("#draw-style").val();
+        content['theme-color'] = $("#show-style").val();
+        content['draw-music'] = $("#draw-music").val();
+        if ($("#bg-img").val() == "") {
+            content['background-img'] = "none";
+        } else if ($("#bg-img").val().indexOf("fakepath") != -1) {
+            content['background-img'] = "base64Str";
+        } else {
+            content['background-img'] = $("#bg-img").val();
+        }
+        content['lucky-music'] = $("#lucky-music").val();
+        content['reward-music'] = $("#reward-music").val();
+        console.log("update #style-theme");
+    } else if (href == "#danmu-sets") {
+        content['font-size'] = $("#font-size").val();
+        content['opacity'] = $("#opacity").val();
+        content['font-family'] = $("#font-family").val();
+        content['font-color'] = $("#font-color").val();
+        content['danmu-speed'] = $("#danmu-speed").val();
+        content['danmu-position'] = $("#danmu-position").val();
+        console.log("update #danmu-sets");
+    }
+    ws.send(JSON.stringify({
+        action: "part-update",
+        content: content
+    }));
     runNotify({
         message: '已成功更新同步',
         messageTitle: 'title',
@@ -745,10 +781,18 @@ function update_setting(obj, event) {
 /* update settings function end */
 
 /* finish activity function begin */
-function finish_activity(obj, event) {
-    if (navigator.userAgent.indexOf("Firefox") != -1 || navigator.userAgent.indexOf("Chrome") !=-1) {
+function confirm_finish_confirm() {
+    var t = new Date();
+    var now = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate() + "-" + 
+    t.getHours() + "-" + t.getMinutes() + "-" + t.getSeconds();
+    ws.send(JSON.stringify({
+        action: 'activity-end-time',
+        content: now
+    }));
+    if (navigator.userAgent.indexOf("Firefox") != -1 ||
+     navigator.userAgent.indexOf("Chrome") !=-1) {
         window.opener = null;
-        window.open("file:///C:/Users/MAC/Desktop/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/ConsoleFrontEnd/login.html", "_self");
+        window.open(login_url, "_self");
         window.close();
     } else {
         window.opener = null;
@@ -756,7 +800,33 @@ function finish_activity(obj, event) {
         window.close();
     }
 }
+function save_configurations() {
+    echo_info("#save-statebar", 0, "设置信息已保存");
+}
+function quit_finish_confirm() {
+    $("#finish-confirm").modal('hide');
+}
+function finish_activity() {
+    $("#finish-confirm").modal('show');
+}
 /* finish activity function end */
+
+/* danmu switch function begin */
+function danmu_switch(event, state) {
+    ws.send(JSON.stringify({
+        action: "danmu-switch",
+        content: state
+    }));
+    console.log("danmu switch: ", state);
+}
+function danmu_check_switch(event, state) {
+    ws.send(JSON.stringify({
+        action: "danmu-check-switch",
+        content: state
+    }));
+    console.log("danmu check switch: ", state);
+}
+/* danmu switch function end */
 
 /* shotcut key functions begin */
 function global_keydown(e) { // global
@@ -854,13 +924,7 @@ function input_keydown(obj, event) { // input
 //-------------------------------bjz-end---------------------------------
 
 /* initialization and bindings */
-$(document).ready(function () {       
-
-    window.onbeforeunload = function(e) {
-        console.log('beforeunload');
-        return 1;
-    };
-
+$(document).ready(function () {
     /* disable browser backward */
     history.pushState(null, null, document.URL);
     window.addEventListener('popstate', function () {
@@ -910,6 +974,11 @@ $(document).ready(function () {
 
     /* import background image binding */
     $("#background-img").change(import_bg_image);
+
+    /* swich initialization */
+    $("[name='switch']").bootstrapSwitch();
+    $("#danmu-switch").on('switchChange.bootstrapSwitch', danmu_switch);
+    $("#danmu-check-switch").on('switchChange.bootstrapSwitch', danmu_check_switch);
 
     /* shotcut key map */
     document.onkeydown = global_keydown;

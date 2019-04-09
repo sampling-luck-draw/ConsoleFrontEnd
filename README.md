@@ -126,6 +126,62 @@ POST {
         }
     },
 }
+// 局部更新消息
+{
+    "action":"part-update",
+    "content":{
+        "part":"#danmu-sets",
+        "danmu-position":"top",
+        "danmu-speed":"slow",
+        "font-color":"",
+        "font-family":"SimHei",
+        "font-size":"20",
+        "opacity":"5"
+    }
+} 
+or
+{
+    "action":"part-update",
+    "content":{
+        "part":"#basic-info",
+        "activity-name":"lalala"
+    }
+}
+or
+{
+    "action":"part-update",
+    "content":{
+        "part":"#prize-pool",
+        "draw-mode":"1"
+    }
+}
+or
+{
+    "action":"part-update",
+    "content":{
+        "part":"#style-theme",
+        "background-img":"none", 
+        // "none" 表示没有背景图片
+        // "base64Str" 表示使用之前传过来的base64格式的图片
+        // 其他内容表示网络URL
+        "draw-music":"haorizi",
+        "draw-style":"cube",
+        "lucky-music":"bingo",
+        "reward-music":"laciji",
+        "theme-color":"#5E2727"
+    }
+}
+// 弹幕开关
+{
+    "action":"danmu-switch",
+    "content":false
+}
+// 弹幕审核开关
+{
+    "action":"danmu-check-switch",
+    "content":false
+}
+
 ```
 #### 2.4 弹幕审核界面
 ### 3 前端描述文档

@@ -70,7 +70,11 @@ $(function() {
                 if (status == 'timeout') {
                     $(".log-bar").text("网络超时错误");
                 }
-        　　}
+        　　},
+            error: function(xhr, state, errorThrown){
+                if (!xhr.status)
+                $(".log-bar").text("未连接网络");
+            }
         });
         return false;
     });

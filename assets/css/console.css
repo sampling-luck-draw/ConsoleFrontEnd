@@ -84,7 +84,7 @@ body {
     flex: 1 1 auto;
 }
 .btn-activity-action, .btn-draw-action {
-    background-color: darkgreen;
+    background-color: #28a745;
     border-radius: 0px;
     color: #ffffffb4;
 }
@@ -148,7 +148,7 @@ table.inline-table {
     display: none;
 }
 .parts-list {
-    height: calc(100% - 300px);
+    height: calc(100% - 200px);
     overflow-y: auto;
 }
 .scrollbar::-webkit-scrollbar {
@@ -318,7 +318,7 @@ input[type=range]:focus {
 	75%  {opacity: 0.75;}
 	100% {opacity: 1;}
 }
-.modal-content {
+#cheat-modal .modal-content {
     overflow: hidden;
     height: 90%;
 }
@@ -352,18 +352,13 @@ input[type=range]:focus {
     width: 25%;
     background-color: #00BCD4;
     border-radius: 0px;
-    color: #ffffffb4;
+    color: #ffffff;
 }
 #switch-page:hover {
-    color: #ffffffff;
+    background-color: #1B7690;
 }
-#finish-activity {
+#finish-activity, #update-setting {
     width: 100%;
-    background-color: #FF4500;
-}
-#update-setting {
-    width: 100%;
-    background-color: #006400;
 }
 /* disabled elements' styles begin */
 .table-icon[disabled="disabled"] i {
@@ -383,7 +378,23 @@ input[type=range]:focus {
     border-bottom: #ffffff solid 1px;
     box-shadow: none;
 }
-
+#finish-confirm .modal-header {
+    border-bottom: none;
+}
+#finish-confirm .modal-footer {
+    border-top: none;
+}
+.bootstrap-switch {
+    height: 40px;
+    position: absolute;
+    right: 15px;
+}
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
+    color: #fff;
+    background-color: #00BCD4;
+    border-color: #00BCD4;
+}
 /* disabled elements' styles end */
 
 @media (max-width: 768px) {
