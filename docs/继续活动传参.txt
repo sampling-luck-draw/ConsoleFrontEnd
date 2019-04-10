@@ -1,0 +1,72 @@
+保存活动-》下次继续活动-》后台发来上次保存的信息（包含所有设置和用户列表（两次发送））
+点击历史活动-》后台发来历史信息（不包括用户列表）
+
+设置信息：
+// 初始化在线功能和服务权限
+抽奖设置信息json格式：
+{
+    "action": "initialize",
+    "content": {
+        "online": "true", // or "false"
+        "userType": "vip" ,// or "normal" or "debug"
+	"url":""
+
+        /*基本信息*/
+        "activity-name": "才明洋表彰大会",
+
+        /*奖池设置*/
+        "draw_mode-chosen": "固定奖项抽用户",
+        "reward-items-names": ["大电视","大音响"],
+        "prize-names":[{"一等奖",“大电视",3},{"二等奖","大音响",3}],
+
+        /*方式主题*/
+        "lottery-style":"魔方",//"闪烁","晃动","默认"
+        "tpoic-color":"#8A5050",
+        "lottery-music":"好运来",//or "好日子"
+        "win-prize-music":"Bingo",
+        "get-prize-music":"拉茨基进行曲",
+
+        /*弹幕设置*/
+        "bullet-font-size":37,
+        "bullet-transparent-degree":4,
+        "bullet-font":"楷体",//or yidui
+        "bullet-color":"#996565",
+        "bullet-velocity":"缓慢",//"正常","快速"
+        "bullet-location":"顶部",//"中间","底部"
+        "bullet-enable":ON,
+        "bullet-check-enable":ON
+
+       /*左侧抽奖状态栏*/
+       "reward-users-list":
+		[{
+		"uid":"江小白",
+		"nickname":"钢链手指",
+		"itemname":"大电视",
+		}
+		,
+		{"id":"李航",
+		"nickname":"黄金体验",
+		"itemname":"大音响",]
+
+ 	      "reward-remain":{3,2},
+	 }
+	}
+
+
+    ws.send(JSON.stringify({
+        action: 'resume-activity',//恢复活动，后台发给前端抽奖设置信息和用户列表
+        content: ""
+    }));
+
+    ws.send(JSON.stringify({
+        action: "set-from-history",///从历史导入活动，后台发给前端抽奖设置信息
+        content: getQueryString('set-from-history'),///历史活动编号
+    }));
+ ws.send(JSON.stringify({
+        action: "save_as_history",///保存为历史设置，不用保存用户列表
+        content: ""
+    }));
+ ws.send(JSON.stringify({
+        action: "pause_this_activity",///临时暂停活动，需要保存用户列表
+        content: ""
+    }));
