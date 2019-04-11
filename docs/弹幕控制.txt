@@ -1,0 +1,24 @@
+1.关键字屏蔽
+2.特定用户屏蔽
+时间 发送人 弹幕内容
+
+后台发给前端：
+{
+action:"bullet"
+content:{
+            "time":"time",
+            "nickname":"string",
+            "uid":"string",
+            "id":"string",
+            "bullet":"string"
+        }
+}
+
+前端发给后台：
+
+屏蔽该弹幕
+{
+    action:"bullet_forbidden"
+    content:"string"//弹幕id
+}
+

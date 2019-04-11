@@ -9,7 +9,7 @@
     "content": {
         "online": "true", // or "false"
         "userType": "vip" ,// or "normal" or "debug"
-	"url":""
+	    "url":""
 
         /*基本信息*/
         "activity-name": "才明洋表彰大会",
