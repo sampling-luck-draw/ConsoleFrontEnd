@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aec7a972-e5cf-4b32-8e93-7782b9a870e1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/js/toastr.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/js/manage_draw.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/manage_draw.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manage_draw.html" beforeDir="false" afterPath="$PROJECT_DIR$/manage_draw.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,23 +17,24 @@
     <session id="1404273410">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="8" />
+          <entry key="project.closed" value="9" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.25" value="1" />
+          <entry key="project.open.time.26" value="1" />
           <entry key="project.open.time.27" value="1" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.33" value="1" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="8" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="css" value="1" />
+          <entry key="css" value="2" />
           <entry key="go" value="1" />
-          <entry key="html" value="4" />
-          <entry key="js" value="6" />
+          <entry key="html" value="5" />
+          <entry key="js" value="7" />
           <entry key="md" value="1" />
           <entry key="py" value="1" />
           <entry key="txt" value="5" />
@@ -40,24 +43,24 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CSS" value="1" />
-          <entry key="HTML" value="4" />
-          <entry key="JavaScript" value="6" />
+          <entry key="CSS" value="2" />
+          <entry key="HTML" value="5" />
+          <entry key="JavaScript" value="7" />
           <entry key="Markdown" value="1" />
           <entry key="PLAIN_TEXT" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="1107" />
-          <entry key="js" value="3838" />
+          <entry key="html" value="1211" />
+          <entry key="js" value="5242" />
           <entry key="txt" value="1343" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="1114" />
-          <entry key="JavaScript" value="3831" />
+          <entry key="HTML" value="1219" />
+          <entry key="JavaScript" value="5234" />
           <entry key="PLAIN_TEXT" value="1343" />
         </counts>
       </usages-collector>
@@ -66,32 +69,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/控制台接口文档.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor />
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/start-menu.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="13" column="15" selection-start-line="13" selection-start-column="15" selection-end-line="13" selection-end-column="15" />
-              <folding>
-                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/assets/js/console.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="7" column="23" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="23" />
+            <state relative-caret-position="697">
+              <caret line="828" column="7" lean-forward="true" selection-start-line="823" selection-start-column="4" selection-end-line="828" selection-end-column="7" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -100,7 +81,25 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tools/wsTool/server.py">
+        <entry file="file://$PROJECT_DIR$/console.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="372">
+              <caret line="376" column="42" selection-start-line="376" selection-start-column="42" selection-end-line="376" selection-end-column="42" />
+              <folding>
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/assets/css/toastr.css">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/assets/js/toastr.min.js">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
@@ -110,12 +109,20 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tools/wsTool/assets/js/wsTool.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="695">
+              <caret line="53" column="3" lean-forward="true" selection-start-line="53" selection-start-column="3" selection-end-line="53" selection-end-column="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manage_draw.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="36" column="61" selection-start-line="36" selection-start-column="61" selection-end-line="36" selection-end-column="61" />
+            <state relative-caret-position="272">
+              <caret line="27" column="25" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="25" />
               <folding>
-                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#table#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#tbody#0;n#table#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -131,16 +138,16 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tools/wsTool/assets/js/wsTool.js">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/assets/js/manage_draw.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="131">
-              <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
+            <state relative-caret-position="429">
+              <caret line="97" column="64" selection-start-line="97" selection-start-column="64" selection-end-line="97" selection-end-column="64" />
+              <folding>
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -177,10 +184,18 @@
       <find>on_draw_btn_click</find>
       <find>6</find>
       <find>add</find>
-      <find>flex</find>
       <find>add_o</find>
       <find>class</find>
       <find>table-success</find>
+      <find>update_setting</find>
+      <find>alert</find>
+      <find>trash</find>
+      <find>mdi-trash-can-outline</find>
+      <find>&lt;button class=&quot;btn btn-round</find>
+      <find>删除</find>
+      <find>flex</find>
+      <find>bullet_list_style</find>
+      <find>float</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -193,9 +208,9 @@
         <option value="$PROJECT_DIR$/assets/js/start-menu.js" />
         <option value="$PROJECT_DIR$/console.html" />
         <option value="$PROJECT_DIR$/assets/js/data_operation.js" />
-        <option value="$PROJECT_DIR$/assets/js/console.js" />
         <option value="$PROJECT_DIR$/docs/继续活动传参.txt" />
         <option value="$PROJECT_DIR$/docs/弹幕控制.txt" />
+        <option value="$PROJECT_DIR$/assets/js/console.js" />
         <option value="$PROJECT_DIR$/manage_draw.html" />
         <option value="$PROJECT_DIR$/assets/js/manage_draw.js" />
       </list>
@@ -218,8 +233,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -231,6 +246,18 @@
               <item name="ConsoleFrontEnd" type="b2602c69:ProjectViewProjectNode" />
               <item name="ConsoleFrontEnd" type="462c0819:PsiDirectoryNode" />
               <item name="assets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ConsoleFrontEnd" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ConsoleFrontEnd" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ConsoleFrontEnd" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ConsoleFrontEnd" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ConsoleFrontEnd" type="b2602c69:ProjectViewProjectNode" />
@@ -264,10 +291,16 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554983295950" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1555342151696" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\java\ConsoleFrontEnd\ConsoleFrontEnd-master\新建文件夹\ConsoleFrontEnd\assets\js" />
+      <recent name="E:\java\ConsoleFrontEnd\ConsoleFrontEnd-master\新建文件夹\ConsoleFrontEnd\assets\css" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -323,11 +356,12 @@
       <workItem from="1555160352619" duration="848000" />
       <workItem from="1555212435218" duration="813000" />
       <workItem from="1555316558037" duration="3153000" />
+      <workItem from="1555330935465" duration="9613000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38592000" />
+    <option name="totallyTimeSpent" value="48205000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -338,7 +372,7 @@
       <window_info id="Capture Tool" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
-      <window_info active="true" content_ui="combo" id="Project" order="5" visible="true" weight="0.22334754" />
+      <window_info content_ui="combo" id="Project" order="5" visible="true" weight="0.22547974" />
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" order="0" />
       <window_info anchor="bottom" id="Terminal" order="1" />
@@ -384,13 +418,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/console.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="432" column="38" selection-start-line="432" selection-start-column="38" selection-end-line="432" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/assets/css/bootstrap.min.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
@@ -416,12 +443,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/console.js">
+    <entry file="file://$PROJECT_DIR$/start-menu.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="7" column="23" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="23" />
+        <state relative-caret-position="325">
+          <caret line="13" column="15" selection-start-line="13" selection-start-column="15" selection-end-line="13" selection-end-column="15" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -432,7 +459,38 @@
     <entry file="file://$PROJECT_DIR$/tools/wsTool/test.go">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/tools/wsTool/assets/js/wsTool.js">
+    <entry file="file://$PROJECT_DIR$/assets/js/start-menu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1625">
+          <caret line="65" column="137" selection-start-line="65" selection-start-column="132" selection-end-line="65" selection-end-column="137" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/console.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="828" column="7" lean-forward="true" selection-start-line="823" selection-start-column="4" selection-end-line="828" selection-end-column="7" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/console.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="376" column="42" selection-start-line="376" selection-start-column="42" selection-end-line="376" selection-end-column="42" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/css/toastr.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/toastr.min.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/弹幕控制.txt">
@@ -442,29 +500,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/start-menu.js">
+    <entry file="file://$PROJECT_DIR$/tools/wsTool/assets/js/wsTool.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1625">
-          <caret line="65" column="137" selection-start-line="65" selection-start-column="132" selection-end-line="65" selection-end-column="137" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/start-menu.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="13" column="15" selection-start-line="13" selection-start-column="15" selection-end-line="13" selection-end-column="15" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="695">
+          <caret line="53" column="3" lean-forward="true" selection-start-line="53" selection-start-column="3" selection-end-line="53" selection-end-column="3" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/manage_draw.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="36" column="61" selection-start-line="36" selection-start-column="61" selection-end-line="36" selection-end-column="61" />
+        <state relative-caret-position="272">
+          <caret line="27" column="25" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="25" />
           <folding>
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#table#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#tbody#0;n#table#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -481,8 +528,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/assets/js/manage_draw.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="131">
-          <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
+        <state relative-caret-position="429">
+          <caret line="97" column="64" selection-start-line="97" selection-start-column="64" selection-end-line="97" selection-end-column="64" />
+          <folding>
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
