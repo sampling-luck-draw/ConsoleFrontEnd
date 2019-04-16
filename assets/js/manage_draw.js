@@ -3,28 +3,33 @@ var forbidden_times=new Array(0,0,0);
 var black_users_list=new Array("李金牙","李金嘴","黄一凡");
 var bullet_list_style=new Array("table-warning","table-light");
 var bullet_num=0;
-// let ws = new WebSocket('ws://127.0.0.1:1923/ws');
-//
-// ws.onmessage = function (message) {
-//     console.log(message.data);
-//     let msg = JSON.parse(message.data);
-//
-//     switch (msg.action) {
-//         case "bullet":
-//             for(var i=0;i<forbidden_words_list.length;i++){
-//                 if(msg.content.bullet.indexOf(forbidden_words_list[i])>-1){
-//                     ws.send(JSON.stringify({
-//                         action: 'bullet_forbidden',
-//                         content: msg.content.id
-//                     }));
-//                 }
-//                 add_bullet(msg.content.time,msg.content.nickname,msg.content.bullet);
-//             }
-//         break;
-//     }
-// }
+update_forbidden_times();
+let ws = new WebSocket('ws://127.0.0.1:1923/ws');
+ws.onmessage = function (message) {
+    console.log(message.data);
+    let msg = JSON.parse(message.data);
 
+    switch (msg.action) {
+        case "bullet":
+            for(var i=0;i<forbidden_words_list.length;i++){
+                var tem=msg.content.bullet.indexOf(forbidden_words_list[i]);
+                if(tem>-1 || distinctive_check(black_users_list,msg.content.nickname)==false){
+                    ws.send(JSON.stringify({
+                        action: 'bullet_forbidden',
+                        content: msg.content.id
+                    }));
+                }
+                if(tem>-1){
+                    forbidden_times[tem]++;
+                    update_forbidden_times();
+                }
+                add_bullet(msg.content.time,msg.content.nickname,msg.content.bullet,msg.content.id);
+            }
+        break;
+    }
+}
 
+///添加屏蔽词
 function add_forbidden() {
     var str=$('#add_a_forbidden_word').val();
     if(distinctive_check(forbidden_words_list,str)==false){
@@ -35,6 +40,7 @@ function add_forbidden() {
         return;
     console.log(str);
     forbidden_words_list.push(str);
+    forbidden_times.push(0);
     var tr=document.createElement('tr');
     var th=document.createElement('th');
     var td1=document.createElement('td');
@@ -50,6 +56,7 @@ function add_forbidden() {
     document.getElementById('add_a_forbidden_word').value="";
     toastr.success('已添加屏蔽词'+str);
 }
+// 添加黑名单
 function add_black_user() {
     var str=$('#add_a_black_user').val();
     if(distinctive_check(black_users_list,str)==false){
@@ -78,7 +85,9 @@ function add_black_user() {
     toastr.success('已将用户'+str+'添加到黑名单');
 }
 var tem=0;
-function add_bullet(a,b,c) {
+
+// 添加弹幕
+function add_bullet(a,b,c,d) {
     tem++;
         var tr=document.createElement('tr');
         var th=document.createElement('th');
@@ -92,6 +101,7 @@ function add_bullet(a,b,c) {
         th.scope="row";
         th.innerText=a;
         td1.innerText=b;
+        td1.value=d;///用户id付给value
         div.innerText=c;
         td2.style.display='flex';
         td2.appendChild(div);
@@ -112,6 +122,8 @@ for(var i=1;i<=100;i++){
     else
         add_bullet("13213","frog","安慕安格瑞");
 }
+
+// 屏蔽该条弹幕
 function forbidden_this_draw(e) {
     // this.parent.style.display=none;
     e.disabled=true;
@@ -129,11 +141,19 @@ function forbidden_this_draw(e) {
     console.log(e.parentElement.parentElement.parentElement.id);
     e.parentElement.parentElement.parentElement.disabled=false;
     // this.parent.parent.pointer-events=
+    e.parentNode.parentNode.parentNode.style.background="#919191";
 
-    e.parentNode.parentNode.parentNode.style.background="#919191"
     toastr.success('已屏蔽弹幕: “'+str+'”');
+
+    var id=e.parentNode.parentNode.previousSibling.previousSibling.value;
+
+    ws.send(JSON.stringify({///
+        action: 'bullet_forbidden',
+        content:id
+    }));
 }
 
+// 屏蔽该用户
 function forbidden_this_user(e) {
     var str=e.parentElement.parentElement.previousSibling.innerText;
     if(distinctive_check(black_users_list,str)==false){
@@ -161,6 +181,7 @@ function forbidden_this_user(e) {
     toastr.success('已将用户'+e.parentElement.parentElement.previousSibling.innerText+'添加到黑名单');
 }
 
+// 在屏蔽词表中删除词
 function delete_this_word(e) {
     var str=e.parentNode.previousSibling.innerText;
     console.log('str'+str);
@@ -172,9 +193,13 @@ function delete_this_word(e) {
         tem.firstElementChild.innerText=loc;
         loc++;
     }
+    for(var i=loc;i<forbidden_times.length;i++){
+        forbidden_times[i-1]=forbidden_times[i];
+    }
+    forbidden_times.pop();
     $(e).parents("tr").remove();
 }
-
+// 在黑名单中删除用户
 function delete_this_people(e) {
     var str=e.parentNode.value;
     console.log('str'+str);
@@ -206,10 +231,22 @@ function removearr(a,b) {
     a.pop();
     return loc;
 }
+
+// 重复检查
 function distinctive_check(a,b) {
     for(var i=0;i<a.length;i++){
         if(a[i]==b)
             return false;
     }
     return true;
+}
+
+// 更新屏蔽次数
+function update_forbidden_times() {
+
+    var tem=document.getElementById('forbidden_words_body').firstElementChild;
+    for(var i=0;i<forbidden_times.length;i++){
+        tem.lastElementChild.innerText=forbidden_times[i].toString();
+        tem=tem.nextElementSibling;
+    }
 }
