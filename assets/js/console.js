@@ -1,5 +1,6 @@
 /* global variable begin */
 let login_url = "file:///C:/Users/MAC/Desktop/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/ConsoleFrontEnd/login.html";
+let bg_img_url = "http://localhost:1923/post" // for debug
 let drawing = false;
 let running = false;
 let started = false;
@@ -140,7 +141,9 @@ function on_activity_btn_click() {
         }
         ws.send(JSON.stringify({
             action: 'show-activity',
-            content: ''
+            content: {
+                cur_item: $cur_item.find("input.item-name").val()
+            }
         }));
     } else {
         $("#activity-label").text("展示活动");
@@ -280,8 +283,7 @@ function import_bg_image() {
     converImgTobase64(src, function(base64Str) {
         $.ajax({ 
             type: "POST",
-            // url: "http://localhost:1923/bg-img",
-            url: "http://localhost:1923/post", // for debug
+            url: bg_img_url,
             dataType: "json",
             data: JSON.stringify({
                 action: "background-image",
@@ -801,6 +803,12 @@ function confirm_finish_confirm() {
     }
 }
 function save_configurations() {
+
+
+    // TODO
+
+
+
     echo_info("#save-statebar", 0, "设置信息已保存");
 }
 function quit_finish_confirm() {
@@ -926,17 +934,17 @@ function input_keydown(obj, event) { // input
 /* initialization and bindings */
 $(document).ready(function () {
     /* disable browser backward */
-    history.pushState(null, null, document.URL);
-    window.addEventListener('popstate', function () {
-        history.pushState(null, null, document.URL);
-    });
+    // history.pushState(null, null, document.URL);
+    // window.addEventListener('popstate', function () {
+    //     history.pushState(null, null, document.URL);
+    // });
 
     /* Import participants binding */
     $("#participants").change(import_participants);
     
     /* Date input binding */
-    $("#start-time").ECalendar(eCalendar);
-    $("#end-time").ECalendar(eCalendar);
+    // $("#start-time").ECalendar(eCalendar);
+    // $("#end-time").ECalendar(eCalendar);
 
     /* font-family list initialize */ // must before select input init
     $("#font-family option").each(function() {

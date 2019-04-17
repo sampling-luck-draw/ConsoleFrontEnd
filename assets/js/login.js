@@ -1,4 +1,4 @@
-let next_page = "file:///C:/Users/MAC/Desktop/软件工程/ConsoleFrontEnd/console.html";
+let next_page = "file:///C:/Users/MAC/Desktop/软件工程/ConsoleFrontEnd/start-menu.1.html";
 let cloud_url = "https://sampling.alphamj.cn/signin";
 let local_url = "http://localhost:1923/post";
 

@@ -1,78 +1,3 @@
-/* body {
-    color: rgb(64, 77, 91);
-    background-color: #2BBAAC;
-    font-weight: 500;
-    font-size: 1.05em;
-    font-family: "Microsoft YaHei", 宋体, "Segoe UI", 
-    "Lucida Grande", Helvetica, Arial, sans-serif, FreeSans, Arimo;
-}
-.input-field {
-    position: relative;
-    margin-top: 1rem;
-}
-.input-field label {
-    color: #9e9e9e;
-    position: absolute;
-    top: 0.8rem;
-    left: 0;
-    font-size: 1rem;
-    cursor: text;
-    transition: .2s ease-out;
-}
-.input-field input {
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid #9e9e9e;
-    border-radius: 0;
-    outline: none;
-    height: 3rem;
-    width: 100%;
-    font-size: 1rem;
-    margin: 0 0 20px 0;
-    padding: 0;
-    box-shadow: none;
-    box-sizing: content-box;
-    transition: all 0.3s;
-}
-.input-field input:focus {
-    outline: none;
-    border-bottom: #5F9EA0 solid 1px;
-    box-shadow: 0px 1px 0px #5F9EA0;
-    border-radius: 0px;
-}
-.input-field label.active {
-    color: #5F9EA0;
-    font-size: 0.8rem;
-    transform: translateY(-140%);
-}
-#login-page {
-    margin-top: 40px;
-}
-
-[class^="mdi-"], [class*="mdi-"] {
-    display: inline-block;
-    font-family: "Material-Design-Icons";
-}
-
-.user-icon, .pwd-icon {
-    font-size: 30px;
-}
-
-.offline-icon {
-    font-size: 20px;
-}
-
-a {
-    color: rgb(64, 77, 91);
-}
-
-
-
-#rem-label {
-    top: 0px;
-}
-*/
-
 .form {
     position: relative;
     z-index: 1;
@@ -116,7 +41,7 @@ a {
 }
 .form button {
     outline: 0;
-    background: #2BBBAD;
+    background: #00BCD4;
     width: 100%;
     border: 0;
     padding: 15px;
@@ -152,7 +77,7 @@ a {
 }
 body {
     color: rgb(64, 77, 91);
-    background-color: rgb(43, 186, 172);
+    background-color: #5F9EA0;
     font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -163,7 +88,7 @@ body:before {
     top: 0;
     left: 0;
     display: block;
-    background: rgb(43, 186, 172);
+    background: #5F9EA0;
     width: 100%;
     height: 100%;
 }

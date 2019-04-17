@@ -39,12 +39,9 @@ $.ajax({
 history_number=5;
 
 
-var tem=1;
+var tem=2;
 if(tem==1){
-    // document.getElementById('create-or-resume-div').style.left=43+'rem';
-    console.log($("#create-or-resume-div").val());
     $(function(){
-        $("#create-or-resume-div").css("left","27rem");
         $("#create-or-resume").text("新建活动");
         $('#create-or-resume-son').text('开始一场抽奖或弹幕活动，重新设置您的抽奖参数，参加人员等数据');
     })
@@ -72,8 +69,6 @@ else if(tem==2){
 
     $(function () {
         $("#create-or-resume-img").attr("src","assets/img/resume-to-activity.jpg");
-        $("#create-or-resume-div").css("left","48rem");
-        $('#create-from-history-div').css('display','none');
         $("#create-or-resume").text("继续活动");
         $('#create-or-resume-son').text('您有一场尚未结束的活动，请返回继续或终止');
     })
