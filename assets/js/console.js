@@ -36,6 +36,56 @@ ws.onmessage = function (message) {
             } else {
                 $("#online-symbol").text("OFFLINE");
             }
+
+            /*init*/
+            $('#bg-img').val(msg.content.url);
+            /*基本信息*/
+            $('#activity-name').val(msg.content.activity-name);
+            /*奖池设置*/
+            $('#draw_mode_chosen').val(msg.content.draw_mode_chosen)
+            for(var i=0;i<msg.content.reward-items-names.length;i++){
+                $("#prize-list-body").append(`<tr>
+                    <td><input id='tem' class="table-input" style="margin-bottom: 0px;" type="text" draggable="true" ondragstart="drag_prize(event)" onblur="check_content(this)"></input></td>
+                    <td class="icon-td"><div class="del-prize table-icon" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
+                    </tr>`);
+                $(".table-input").attr("onkeydown", "input_keydown(this, event)");
+                $('#tem').attr("value",msg.content.rewa-itims-names[i]);
+            }
+            for(var i=0;i<msg.content.prize-names.length;i++){$("#item-list-body").append(`<tr>
+            <td><input id="tem1" class="table-input item-name" type="text" onblur="check_content(this)"></input></td>
+            <td><input id="tem2" class="item-prize" readonly="readonly" ondrop="drop_prize(event)" ondragover="allowDrop(event)"></input></td>
+            <td><input id="tem3" "class="table-input max_winner" type="number" min="1" value="1"></input></td>
+            <td class="icon-td">
+            ` + cheat_functions + `
+            <div class="del-item table-icon" onclick="del_item(this)"><i class="mdi mdi-trash-can-outline"></i></div>
+            </td>
+            </tr>`);
+                $('#tem1').attr("value",msg.content.prize-names[i][0]);
+                $('#tem2').attr("value",msg.content.prize-names[i][1]);
+                $('#tem3').attr("value",msg.content.prize-names[i][2]);
+            }
+            /*方式主题*/
+            $('#draw_style_chosen').val(msg.content.lottery-style);
+            $('#show_style').attr(value,msg.content.topic-color);
+            $('#draw_music_chosen').val(msg.content.lottery-music);
+            $('#lucky_music_chosen').val(msg.content.win-prize-music);
+            $('#reward_music_chosen').val(msg.content.get-prize-music);
+
+            /*弹幕设置*/
+            $('#font-size').val(msg.content.bullet-font-size);
+            $('#opacity').val(msg.content.bullet-transparent-degree);
+            $('#chosen-single').val(msg.content.bullet-font);
+            $('#font-color').val(msg.content.bullet-color);
+            $('#danmu_speed_chosen').val(msg.content.bullet-velocity);
+            $('#danmu_position_chosen').val(msg.content.bullet-location);
+            $('#danmu-switch').val(msg.content.bullet-enable);
+            $('#danmu-check-switch').val(msg.content.bullet-check-enable);
+
+            /*抽奖状态*/
+            for(var i=0;i<msg.content.reward-users-list.length;i++)
+            show_lucky_dog(msg.content.reward-users-list[i].uid, msg.content.reward-users-list[i].nickname, msg.content.reward-users-list[i].itemname);
+            ///TODO:剩余抽奖次数逻辑没写
+
             break;
         case 'who-is-lucky-dog':
             show_lucky_dog(msg.content.uid, msg.content.nickname, msg.content.itemname);
@@ -853,79 +903,59 @@ function input_keydown(obj, event) { // input
 //-------------------------------bjz-begin---------------------------------
 //-------------------------------bjz-begin---------------------------------
 
-// function getQueryString(name) {//获取name参数的值
-//     var result = window.location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
-//     if (result == null || result.length < 1) {
-//         return "";
-//     }
-//     return result[1];
+function getQueryString(name) {//获取name参数的值
+    var result = window.location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+    if (result == null || result.length < 1) {
+        return "";
+    }
+    return result[1];
+}
+
+var path=getQueryString('path');
+// console.log(path);
+// var fso=new ActiveXObject(Scripting.FileSystemObject);
+// var f=fso.opentextfile(path,1,true);
+// while (!f.AtEndOfStream) {
+//     console.log(f.Readline());
 // }
+// f.close();
+function save_as_history(){///保存为历史设置
+    ws.send(JSON.stringify({
+        action: "save_as_history",
+        content: ""
+    }));
+}
 
-// var path=getQueryString('path');
-// // console.log(path);
-// // var fso=new ActiveXObject(Scripting.FileSystemObject);
-// // var f=fso.opentextfile(path,1,true);
-// // while (!f.AtEndOfStream) {
-// //     console.log(f.Readline());
-// // }
-// // f.close();
-// function get_history_information(){///得到历史活动参数
+function pause() {///临时暂停活动
+    ws.send(JSON.stringify({
+        action: "pause_this_activity",
+        content: ""
+    }));
+}
 
-//     let data =  {
-//         username: path,
-//         // password: $('#inputPassword').val(),
-//     };
-//     if (data.username === '' || data.password === '')
+function save_information_as_history(){///保存活动信息
+    let data =  {
+        activity_id:'tem_activity_id',
+        activity_name:'tem_activity_name',
+        activity_maxnum:'tem_activity_maxnum',
+        reward_information:'tem_reward_information',
+        // password: $('#inputPassword').val(),
+    };
+    $.ajax({
+        url: 'signin',//老才的服务器名
+        method: 'POST',
+        contentType: 'json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        success: function(e) {
+            console.log('保存成功');
+        },
+        error: function (e) {
+            console.log(e);
+        }
+    })
 
-//     $.ajax({
-//         url: 'signin',//老才的服务器名
-//         method: 'POST',
-//         contentType: 'json',
-//         dataType: 'json',
-//         data: JSON.stringify(data),
-//         success: function(e) {
-//             if (e.result === 'success') {
-//                 window.location.href="usercenter"
-//             } else {
-//                 console.log(e.msg);
-//                 $("#toast-body").html(e.msg);
-//                 $('.toast').toast('show');
-//             }
-//             console.log('活动名称'+e.activity_name);
-//             console.log('最大人数'+e.activity_maxnum);
-//             console.log('结束时间'+e.endtime);
-//             console.log('奖项信息'+e.reward_information);
-
-//         },
-//         error: function (e) {
-//             console.log(e);
-//         }
-//     })
-// }
-// function save_information_as_history(){///保存活动信息
-//     let data =  {
-//         activity_id:'tem_activity_id',
-//         activity_name:'tem_activity_name',
-//         activity_maxnum:'tem_activity_maxnum',
-//         reward_information:'tem_reward_information',
-//         // password: $('#inputPassword').val(),
-//     };
-//     $.ajax({
-//         url: 'signin',//老才的服务器名
-//         method: 'POST',
-//         contentType: 'json',
-//         dataType: 'json',
-//         data: JSON.stringify(data),
-//         success: function(e) {
-//             console.log('保存成功');
-//         },
-//         error: function (e) {
-//             console.log(e);
-//         }
-//     })
-
-// }
-// jsReadFiles(path);
+}
 //-------------------------------bjz-end---------------------------------
 //-------------------------------bjz-end---------------------------------
 //-------------------------------bjz-end---------------------------------

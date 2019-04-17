@@ -24,24 +24,35 @@
         </nav>
     </div>
     <!--create new from blank-->
-    <div class="row" style="padding-top: 100px; padding-bottom: 100px;">
-        <div class="col-md-6">
-            <div class="card">
-                <img class="card-img-top" id="create-or-resume-img" src="assets/img/create-from-blank.jpg" alt="Card image cap" style="height: 15rem;">
-                <div class="card-body">
-                    <h5 class="card-title" id="create-or-resume">新建活动/继续活动</h5>
-                    <p class="card-text" id="create-or-resume-son">开始一场抽奖或弹幕活动，重新设置您的抽奖参数，参加人员等数据/您有一场尚未结束的活动</p>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">进入</button>
+    <div class="card" id="create-or-resume-div" style="width: 25rem;top: 10rem;">
+        <img class="card-img-top" id="create-or-resume-img" src="assets/img/create-from-blank.jpg" alt="Card image cap" style="height: 15rem;">
+        <div class="card-body">
+            <h5 class="card-title" id="create-or-resume">新建活动/继续活动</h5>
+            <p class="card-text" id="create-or-resume-son">开始一场抽奖或弹幕活动，重新设置您的抽奖参数，参加人员等数据/您有一场尚未结束的活动</p>
+            <button id="create-or-resume-button" type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">进入</button>
 
-                    <!--write initial information-->
-                    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="myLargeModalLabel">新建活动</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true"></span>
-                                    </button>
+            <!--write initial information-->
+            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myLargeModalLabel">新建活动</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="modal-body " style="align-items: center">
+                            <form method="post" action="console.html">
+                                <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="input-activity-name">活动名称</label>
+                                    <input type="text" class="form-control" id="input-activity-name" placeholder="input your activity's name" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="max-population">最大人数</label>
+                                    <input type="number" class="form-control" id="max-population" placeholder="Enter the maximum number of people allowed to enter" required>
+                                </div>
                                 </div>
                                 <div class="modal-body " style="align-items: center">
                                     <form method="post" action="console.html">
