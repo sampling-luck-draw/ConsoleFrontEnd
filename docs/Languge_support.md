@@ -1,6 +1,3 @@
----
-enable html: true
----
 # Language Support for HTMLs
 
 ## 1 language support package
@@ -8,9 +5,9 @@ enable html: true
 We shall provide support packages for different language in our portal site, together with the releases of entire lucky draw software. Users can choose whether to use these plugins or not and we shall provide a default language, like Chinese, for them. 
 
 Users download the package they need and put it into a specific directory where our software is installed. They revise a configuration file to give the name of package. The configuration file can serve as a package controller. Here’s a proposal in JSON:
-```json
+```plain
 {
-  'language-support': 'package_name' / 'none' if no package
+  "language-support": "package_name" / "none" if no package
   ...other support...
 }
 ```
@@ -28,12 +25,12 @@ You need to read `console.html` which you can get from `https://github.com/sampl
 
 **define file content organization**
 The package is like a dictionary with pairs of variable names and corresponding translations. A JSON filetype is  recommended:
-```json
+```plain
 {
-  'language': 'ENGLISH',
-  'vocabulary': {
-    'console_title': 'sampling lucky draw',
-    'start_draw_btn_text': 'start draw'
+  "language": "ENGLISH",
+  "vocabulary": {
+    "console_title": "sampling lucky draw",
+    "start_draw_btn_text": "start draw"
     ...other pairs...
   }
 }
@@ -41,15 +38,15 @@ The package is like a dictionary with pairs of variable names and corresponding 
 And also you can define a form with chinese references:
 ```json
 {
-  'language': 'ENGLISH',
-  'vocabulary': {
-    'console_title': {
-      'translate': 'sampling lucky draw',
-      'reference': '三百两抽奖系统'
+  "language": "ENGLISH",
+  "vocabulary": {
+    "console_title": {
+      "translate": "sampling lucky draw",
+      "reference": "三百两抽奖系统"
     },
-    'start_draw_btn_text': {
-      'translate': 'start draw',
-      'reference': '开始抽奖'
+    "start_draw_btn_text": {
+      "translate": "start draw",
+      "reference": "开始抽奖"
     }
     ...other pairs...
   }
@@ -71,7 +68,7 @@ You need to reorganize your word list to fit the package form you defined before
 
 ## 2 backend template rendering
 
-Go language provide a method to render views(htmls) before they are passed to the front end so that you can pass specific variables. You can get a lot of tutorials on the internet, an example: `https://blog.csdn.net/u013210620/article/details/78522293`. For Chinese query keywords, you can use ‘Go语言’, ‘Golang’, ‘模板渲染’ and ‘模板’.
+Go language provide a method to render views(htmls) before they are passed to the front end so that you can pass specific variables. You can get a lot of tutorials on the internet, an example: `https://blog.csdn.net/u013210620/article/details/78522293`. For Chinese query keywords, you can use "Go语言", "Golang", "模板渲染" and "模板".
 
 You can change the form of variables you have inserted in `console.html` to fit golang’s template syntax. And in the backend GO server file, you read the word list out of the package file (using JSON parser), and then generate the dictionary from that, and pass it to renderer finally.
 

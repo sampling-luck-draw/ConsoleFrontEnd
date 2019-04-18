@@ -1,8 +1,10 @@
 var forbidden_words_list=new Array("优秀","太强了","天下第一");
 var forbidden_times=new Array(0,0,0);
 var black_users_list=new Array("李金牙","李金嘴","黄一凡");
-var bullet_list_style=new Array("table-warning","table-light");
+var user_map = new Object();
+let $cur_line = new Object();
 var bullet_num=0;
+let cursor_used = false;
 update_forbidden_times();
 let ws = new WebSocket('ws://127.0.0.1:1923/ws');
 ws.onmessage = function (message) {
@@ -11,22 +13,98 @@ ws.onmessage = function (message) {
 
     switch (msg.action) {
         case "bullet":
-            for(var i=0;i<forbidden_words_list.length;i++){
+            var forbidden = false;
+            for(var i=0;i<forbidden_words_list.length;i++) {
                 var tem=msg.content.bullet.indexOf(forbidden_words_list[i]);
-                if(tem>-1 || distinctive_check(black_users_list,msg.content.nickname)==false){
-                    ws.send(JSON.stringify({
-                        action: 'bullet_forbidden',
-                        content: msg.content.id
-                    }));
-                }
-                if(tem>-1){
-                    forbidden_times[tem]++;
+                if(tem>-1 || distinctive_check(black_users_list,msg.content.uid)==false){
+                    console.log("bullet forbidden");
+                    forbidden_times[i]++;
                     update_forbidden_times();
+                    forbidden = true; break;
                 }
-                add_bullet(msg.content.time,msg.content.nickname,msg.content.bullet,msg.content.id);
             }
-        break;
+            if (!forbidden) {
+                user_map[msg.uid] = msg.user_nickname;
+                add_bullet(
+                    msg.content.time,
+                    msg.content.uid,
+                    msg.content.nickname,
+                    msg.content.bullet,
+                    msg.content.id
+                );
+            }
+            break;
+        case "add-forbidden-time":
+            for(var i=0;i<forbidden_words_list.length;i++) {
+                if (forbidden_words_list[i] == msg.content) {
+                    forbidden_times[i]++;
+                    update_forbidden_times();
+                    break;
+                }
+            }
+            break;
     }
+}
+/// 小工具
+String.prototype.format = function() {
+    var args = Array.prototype.slice.call(arguments);
+    var count = 0;
+    return this.replace(/%s/g, function(s, i){
+        return args[count ++];
+    });
+}
+
+/// 快捷键
+function pressDown() {
+    if ($("#bullets_list_tbody tr").length == 0) return;
+    $cur_line.removeClass("active");
+    if ($cur_line.nextAll().length == 0) {
+        $cur_line = $("#bullets_list_tbody tr:first");
+    } else {
+        $cur_line = $cur_line.next();
+    }
+    $cur_line.addClass("active");    
+}
+document.onkeydown = function(event) {
+    switch (event.keyCode) {
+        case 38: { // UP
+            cursor_used = false;
+            if ($("#bullets_list_tbody tr").length == 0) return;
+            $cur_line.removeClass("active");
+            if ($cur_line.prevAll().length == 0) {
+                $cur_line = $("#bullets_list_tbody tr:last");
+            } else {
+                $cur_line = $cur_line.prev();
+            }
+            $cur_line.addClass("active");
+            $("#bullets_list").animate(
+                {scrollTop:$cur_line.prevAll().length * $cur_line.height()}, 100);
+            break;
+        }
+        case 40: { // Down
+            cursor_used = false;
+            pressDown();
+            $("#bullets_list").animate(
+                {scrollTop:$cur_line.prevAll().length * $cur_line.height()}, 100);
+            break;
+        }
+        case 37: { // Left
+            allow_this_draw();
+            break;
+        }
+        case 39: { // Right
+            forbidden_this_draw();
+            break;
+        }
+    }
+};
+
+/// 点击选中弹幕
+function select_bullet(obj) {
+    cursor_used = true;
+    $cur_line.removeClass("active");
+    $cur_line = $(obj); 
+    $cur_line.addClass("active");
 }
 
 ///添加屏蔽词
@@ -54,11 +132,14 @@ function add_forbidden() {
     tr.appendChild(td2);
     $('#forbidden_words_body').append(tr);
     document.getElementById('add_a_forbidden_word').value="";
-    toastr.success('已添加屏蔽词'+str);
+    ws.send(JSON.stringify({
+        action: "add-forbidden-word",
+        content: str
+    }));
+    toastr.warning('已添加屏蔽词'+str);
 }
 // 添加黑名单
-function add_black_user() {
-    var str=$('#add_a_black_user').val();
+function add_black_user(str) {
     if(distinctive_check(black_users_list,str)==false){
         toastr.error('用户:'+str+'已经在黑名单中！');
         return;
@@ -67,118 +148,97 @@ function add_black_user() {
         return;
     console.log(str);
     black_users_list.push(str);
-    var tr=document.createElement('tr');
-    var th=document.createElement('th');
-    var td1=document.createElement('td');
-    var td2=document.createElement('td');
-    td2.value=str;
-    th.scope="row";
-    th.innerText=black_users_list.length;
-    td1.innerText="--";
-    td2.innerHTML=str+'<a  onclick="delete_this_people(this)" style="float:right" href="#!">删除</a>';
-    tr.appendChild(th);
-    tr.appendChild(td1);
-    tr.appendChild(td2);
-    $('#black_users_list_body').append(tr);
-    document.getElementById('add_a_black_user').value="";
-
-    toastr.success('已将用户'+str+'添加到黑名单');
+    var tr = "<tr>%s</tr>";
+    var td = "<td>%s</td>";
+    var th = "<th scope='row'>%s</th>";
+    var line_number = th.format(black_users_list.length);
+    var user_id = td.format(str);
+    var nickname = (str in user_map) ? user_map[str]: "--";
+    var user_nickname = td.format(nickname + `
+    <a onclick="delete_this_people(this)" style="float:right" href="#!">删除</a>`);
+    $('#black_users_list_body').append(
+        tr.format(line_number + user_id + user_nickname));
+    document.getElementById('add_a_black_user').value = "";
+    ws.send(JSON.stringify({
+        action: "add-forbidden-user",
+        content: str
+    }));
+    toastr.warning('已将用户'+str+'添加到黑名单');
 }
 var tem=0;
 
 // 添加弹幕
-function add_bullet(a,b,c,d) {
-    tem++;
-        var tr=document.createElement('tr');
-        var th=document.createElement('th');
-        var td1=document.createElement('td');
-        var td2=document.createElement('td');
-        var div=document.createElement('div');
-        // tr.className+=bullet_list_style[bullet_num%bullet_list_style.length];
-    tr.style.background="#ffffff"
-    td2.style.paddingTop=8;
-    td2.style.paddingRight=8;
-        th.scope="row";
-        th.innerText=a;
-        td1.innerText=b;
-        td1.value=d;///用户id付给value
-        div.innerText=c;
-        td2.style.display='flex';
-        td2.appendChild(div);
-        td2.innerHTML+='<div class="btn-group btn-group-sm right" role="group" aria-label="Basic example" >\n' +
-            '        <button type="button" class="btn btn-secondary" onclick="forbidden_this_draw(this)">屏蔽该弹幕</button>\n' +
-            '        <button type="button" class="btn btn-danger" onclick="forbidden_this_user(this)">将该用户加入到黑名单</button>\n' +
-            '        </div>';
-        tr.appendChild(th);
-        tr.appendChild(td1);
-        tr.appendChild(td2);
-        tr.id=tem;
-    $('#bullets_list').append(tr);
-    bullet_num++;
+function add_bullet(time, user_id, nickname, bullet, id) {
+    tem ++;
+    var tr = "<tr bullet_id='%s' onclick='select_bullet(this)'>%s</tr>";
+    var td = "<td class='%s'>%s</td>";
+    var item_time = td.format("bullet-time", time);
+    var item_user_id = td.format("bullet-userid", user_id);
+    var item_nickname = td.format("bullet-nickname", nickname);
+    var item_bullet = td.format("bullet-content", bullet);
+    $('#bullets_list_tbody').append(
+        tr.format(id, item_time + item_user_id + item_nickname + item_bullet));
+    if ($("#bullets_list_tbody tr").length == 1) {
+        $cur_line = $("#bullets_list_tbody tr:first");
+        $cur_line.addClass("active");
+    }
+    bullet_num ++;
 }
 for(var i=1;i<=100;i++){
     if(i&1)
-        add_bullet("13213","frog","不要总想着搞什么大新闻");
+        add_bullet("13213" + String(i), "314159", "frog", "不要总想着搞什么大新闻", i);
     else
-        add_bullet("13213","frog","安慕安格瑞");
+        add_bullet("13213" + String(i), "265358", "frog", "安慕安格瑞", i);
 }
 
 // 屏蔽该条弹幕
-function forbidden_this_draw(e) {
-    // this.parent.style.display=none;
-    e.disabled=true;
-    var str=e.parentElement.previousSibling.innerText;
-    console.log(str);
-    var par=e.parentElement;
-    var par_presib=e.parentElement.previousSibling;
-    var par_par=e.parentElement.parentElement;
-    var del=document.createElement('strike');
-    del.innerText=str;
-    par_par.removeChild(par_presib);
-    par_par.prepend(del);
+function forbidden_this_draw() {
+    if ($("#bullets_list_tbody tr").length == 0) return;
+    toastr.clear();
+    var str = $cur_line.find(".bullet-content").text();
+    $temp = $cur_line;
+    pressDown();
+    $temp.remove();
+    if (!cursor_used) $("#bullets_list").animate({
+        scrollTop:$cur_line.prevAll().length * $cur_line.height()}, 0);
+    toastr.warning('已屏蔽弹幕: “' + str + '”');
+}
 
-
-    console.log(e.parentElement.parentElement.parentElement.id);
-    e.parentElement.parentElement.parentElement.disabled=false;
-    // this.parent.parent.pointer-events=
-    e.parentNode.parentNode.parentNode.style.background="#919191";
-
-    toastr.success('已屏蔽弹幕: “'+str+'”');
-
-    var id=e.parentNode.parentNode.previousSibling.previousSibling.value;
-
-    ws.send(JSON.stringify({///
-        action: 'bullet_forbidden',
-        content:id
+// 允许该条弹幕
+function allow_this_draw() {
+    if ($("#bullets_list_tbody tr").length == 0) return;
+    toastr.clear();
+    var id = $cur_line.attr("bullet_id");
+    var str = $cur_line.find(".bullet-content").text();
+    $temp = $cur_line;
+    pressDown();
+    $temp.remove();
+    if (!cursor_used) $("#bullets_list").animate({
+        scrollTop:$cur_line.prevAll().length * $cur_line.height()}, 0);
+    toastr.success('已允许弹幕: “' + str + '”');
+    ws.send(JSON.stringify({
+        action: 'bullet_allow',
+        content: id
     }));
 }
 
 // 屏蔽该用户
-function forbidden_this_user(e) {
-    var str=e.parentElement.parentElement.previousSibling.innerText;
-    if(distinctive_check(black_users_list,str)==false){
-        toastr.error('用户:'+str+'已经在黑名单中！');
-        return;
-    }
-    black_users_list.push(str);
-    var tr=document.createElement('tr');
-    var th=document.createElement('th');
-    var td1=document.createElement('td');
-    var td2=document.createElement('td');
-    td2.value=str;
-    th.scope="row";
-    th.innerText=black_users_list.length;
-    td1.innerText="--";
-    td2.innerHTML=str+'<a  onclick="delete_this_people(this)" style="float:right" href="#!">删除</a>';
-    tr.appendChild(th);
-    tr.appendChild(td1);
-    tr.appendChild(td2);
-    $('#black_users_list_body').append(tr);
-
-    e.disabled=true;
-
-
-    toastr.success('已将用户'+e.parentElement.parentElement.previousSibling.innerText+'添加到黑名单');
+function forbidden_this_user() {
+    if ($("#bullets_list_tbody tr").length == 0) return;
+    toastr.clear();
+    var str = $cur_line.find(".bullet-userid").text();
+    add_black_user(str);
+    var first = true;
+    $cur_line.removeClass("active");
+    $("#bullets_list_tbody tr").each(function() {
+        if ($(this).find(".bullet-userid").text() == str) {
+            $(this).remove();
+        } else if (first) {
+            $cur_line = $(this);
+            $cur_line.addClass("active");
+            first = false;
+        }
+    });
 }
 
 // 在屏蔽词表中删除词
@@ -198,6 +258,10 @@ function delete_this_word(e) {
     }
     forbidden_times.pop();
     $(e).parents("tr").remove();
+    ws.send(JSON.stringify({
+        action: "remove-forbidden-word",
+        content: str
+    }));
 }
 // 在黑名单中删除用户
 function delete_this_people(e) {
@@ -212,6 +276,10 @@ function delete_this_people(e) {
         loc++;
     }
     $(e).parents("tr").remove();
+    ws.send(JSON.stringify({
+        action: "remove-forbidden-user",
+        content: str
+    }));
 }
 
 function removearr(a,b) {
@@ -243,7 +311,6 @@ function distinctive_check(a,b) {
 
 // 更新屏蔽次数
 function update_forbidden_times() {
-
     var tem=document.getElementById('forbidden_words_body').firstElementChild;
     for(var i=0;i<forbidden_times.length;i++){
         tem.lastElementChild.innerText=forbidden_times[i].toString();
