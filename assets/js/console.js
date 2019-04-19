@@ -15,6 +15,7 @@ let cheat_data = new Array();
 
 /** WebSocket initialization begin */
 let ws = new Object();
+let connected = false;
 
 function recv_ws_message(message) {
     console.log(message.data);
@@ -130,7 +131,7 @@ function start_draw() {
         levelMessage: 'info',
         timer: '2500'
     });
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: 'start-drawing',
         content: {'dkind': $("#draw-style").val()}
     }));
@@ -152,7 +153,7 @@ function stop_draw() {
     if (cur_draw_times == max_draw_times) {
         $(".btn-draw-action").prop("disabled", true);
     }
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: 'stop-drawing',
         content: ""
     }));
@@ -183,13 +184,13 @@ function on_activity_btn_click() {
             var t = new Date();
             var now = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate() + "-" + 
             t.getHours() + "-" + t.getMinutes() + "-" + t.getSeconds();
-            ws.send(JSON.stringify({
+            if (connected) ws.send(JSON.stringify({
                 action: 'activity-start-time',
                 content: now
             }));
             started = true;
         }
-        ws.send(JSON.stringify({
+        if (connected) ws.send(JSON.stringify({
             action: 'show-activity',
             content: {
                 cur_item: $cur_item.find("input.item-name").val()
@@ -214,7 +215,7 @@ function on_activity_btn_click() {
         $cur_item.find(".item-prize").addClass("disable");
         $(".btn-activity-action").prop("disabled", true);
         if (drawing) stop_draw();
-        ws.send(JSON.stringify({
+        if (connected) ws.send(JSON.stringify({
             action: 'hide-activity',
             content: ''
         }));
@@ -284,7 +285,7 @@ function import_participants() {
                         record_str += "<td>" + data[i][item] + "</td>";
                         content[item] = data[i][item];
                     }
-                    ws.send(JSON.stringify({
+                    if (connected) ws.send(JSON.stringify({
                         action: 'manual-import',
                         content: content
                     }));
@@ -565,7 +566,7 @@ function show_lucky_dog(uid, username, itemname) {
         var username = $user.text();
         var uid = $user.attr("uid");
         var itemname = $tr.find("td.itemname").text();
-        ws.send(JSON.stringify({
+        if (connected) ws.send(JSON.stringify({
             action: "disable-lucky",
             content: {
                 uid: uid,
@@ -779,7 +780,7 @@ function quit_cheat_cfg() {
 /* switch stage page begin */
 function switch_page() {
     $("#page-name").text($(this).text());
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "switch-page",
         content: $("#page-name").text()
     }));
@@ -819,7 +820,7 @@ function update_setting(obj, event) {
         content['danmu-position'] = $("#danmu-position").val();
         console.log("update #danmu-sets");
     }
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "part-update",
         content: content
     }));
@@ -837,7 +838,7 @@ function confirm_finish_confirm() {
     var t = new Date();
     var now = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate() + "-" + 
     t.getHours() + "-" + t.getMinutes() + "-" + t.getSeconds();
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: 'activity-end-time',
         content: now
     }));
@@ -871,14 +872,14 @@ function finish_activity() {
 
 /* danmu switch function begin */
 function danmu_switch(event, state) {
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "danmu-switch",
         content: state
     }));
     console.log("danmu switch: ", state);
 }
 function danmu_check_switch(event, state) {
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "danmu-check-switch",
         content: state
     }));
@@ -905,6 +906,22 @@ jQuery.fn.choose = function (option) {
     if (chosen_index == -1) return;
     $(("#%s a.chosen-single").format(chosen_id)).mousedown();
     $(("#%s li[data-option-array-index=%s]").format(chosen_id, chosen_index)).mouseup();
+}
+
+/// Range Input设置值
+jQuery.fn.scrollTo = function (value) {
+    $(this).val(value);
+    $(this).trigger('input');
+}
+
+/// switch 开关
+jQuery.fn.turn = function (state) {
+    console.log("turn " + state);
+    var new_state = state == "on";
+    var cur_state = $(this).bootstrapSwitch("state");
+    if ((new_state && !cur_state) || (!new_state && cur_state)) {
+        $(this).bootstrapSwitch("toggleState");
+    }
 }
 
 /* shotcut key functions begin */
@@ -941,14 +958,14 @@ var path=getQueryString('path');
 // }
 // f.close();
 function save_as_history(){///保存为历史设置
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "save_as_history",
         content: ""
     }));
 }
 
 function pause() {///临时暂停活动
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "pause_this_activity",
         content: ""
     }));
@@ -1045,5 +1062,8 @@ $(document).ready(function () {
     $("#cur-item-input").attr("onkeydown", "input_keydown(this, event)");
 
     ws = new WebSocket('ws://127.0.0.1:1923/ws');
-    ws.onmessage = recv_ws_message;
+    if (!$.isEmptyObject(ws)) {
+        connected = true;
+        ws.onmessage = recv_ws_message;
+    }
 });
