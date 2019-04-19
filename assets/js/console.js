@@ -924,6 +924,12 @@ jQuery.fn.turn = function (state) {
     }
 }
 
+/// minicolor
+jQuery.fn.setColor = function (color) {
+    $(this).val(color);
+    $(this).trigger('keyup');
+}
+
 /* shotcut key functions begin */
 function global_keydown(e) { // global
 
@@ -1062,7 +1068,7 @@ $(document).ready(function () {
     $("#cur-item-input").attr("onkeydown", "input_keydown(this, event)");
 
     ws = new WebSocket('ws://127.0.0.1:1923/ws');
-    if (!$.isEmptyObject(ws)) {
+    if (!$.isEmptyObject(ws) && ws.readyState == 1) {
         connected = true;
         ws.onmessage = recv_ws_message;
     }
