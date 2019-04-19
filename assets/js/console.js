@@ -14,9 +14,9 @@ let cheat_data = new Array();
 /* global variable end */
 
 /** WebSocket initialization begin */
-let ws = new WebSocket('ws://127.0.0.1:1923/ws');
+let ws = new Object();
 
-ws.onmessage = function (message) {
+function recv_ws_message(message) {
     console.log(message.data);
     let msg = JSON.parse(message.data);
     switch (msg.action) {
@@ -886,6 +886,27 @@ function danmu_check_switch(event, state) {
 }
 /* danmu switch function end */
 
+/// 小工具
+String.prototype.format = function() {
+    var args = Array.prototype.slice.call(arguments);
+    var count = 0;
+    return this.replace(/%s/g, function(s, i){
+        return args[count ++];
+    });
+}
+
+/// chosen插件的选择功能
+jQuery.fn.choose = function (option) {
+    var chosen_id = $(this).attr("id").replace('-', '_') + "_chosen";
+    var chosen_index = -1;
+    $(this).find("option").each(function(index, element) {
+        if ($(element).val() == option) chosen_index = index;
+    });
+    if (chosen_index == -1) return;
+    $(("#%s a.chosen-single").format(chosen_id)).mousedown();
+    $(("#%s li[data-option-array-index=%s]").format(chosen_id, chosen_index)).mouseup();
+}
+
 /* shotcut key functions begin */
 function global_keydown(e) { // global
 
@@ -963,6 +984,7 @@ function save_information_as_history(){///保存活动信息
 
 /* initialization and bindings */
 $(document).ready(function () {
+    
     /* disable browser backward */
     // history.pushState(null, null, document.URL);
     // window.addEventListener('popstate', function () {
@@ -1021,4 +1043,7 @@ $(document).ready(function () {
     /* shotcut key map */
     document.onkeydown = global_keydown;
     $("#cur-item-input").attr("onkeydown", "input_keydown(this, event)");
+
+    ws = new WebSocket('ws://127.0.0.1:1923/ws');
+    ws.onmessage = recv_ws_message;
 });
