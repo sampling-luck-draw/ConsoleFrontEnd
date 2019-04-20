@@ -45,7 +45,7 @@ function recv_ws_message(message) {
             /*基本信息*/
             $('#activity-name').val(msg.content.activity_name);
             /*奖池设置*/
-            $('#draw_mode_chosen').val(msg.content.draw_mode_chosen)
+            $('#draw-mode').val(msg.content.draw_mode_chosen)
             for(var i=0;i<msg.content.reward_items_names.length;i++){
                 add_prize1(msg.content.reward_items_names[i]);
             }
@@ -855,45 +855,8 @@ function confirm_finish_confirm() {
 }
 function save_configurations() {
     ws.send(JSON.stringify({
-
-        action: "initialize",
-        content: {
-        online: "true",
-            userType: "vip" ,
-            url:"",
-            activity_name: "才明洋表彰大会",
-            draw_mode_chosen: "固定奖项抽用户",
-
-            reward_items_names: ["大电视","大音响"],
-            prize_names:[["一等奖","大电视",3],["二等奖","大音响",3]],
-            lottery_style:"swing",
-            topic_color:"#8A5010",
-            lottery_music:"haorizi",
-            win_prize_music:"bingo",
-            get_prize_music:"laciji",
-            bullet_font_size:37,
-            bullet_transparent_degree:4,
-            bullet_font:"SimHei",
-            bullet_color:"#996565",
-            bullet_velocity:"fast",
-            bullet_location:"mid",
-            reward_users_list:
-        [{
-            uid:"江小白",
-            nickname:"钢链手指",
-            itemname:"大电视"
-        },
-            {uid:"李航",
-                nickname:"黄金体验",
-                itemname:"大音响"
-            }],
-            reward_remain:[3,2],
-            danmu_switch:"on",
-            danmu_check_switch:"on"
-
-             }
-
-
+        action:"save_as_history",
+        content:""
     }));
 
 
