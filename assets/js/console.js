@@ -15,6 +15,8 @@ let cheat_data = new Array();
 
 /** WebSocket initialization begin */
 let ws = new Object();
+let connected = false;
+
 
 function recv_ws_message(message) {
     console.log(message.data);
@@ -129,7 +131,7 @@ function start_draw() {
         levelMessage: 'info',
         timer: '2500'
     });
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: 'start-drawing',
         content: {'dkind': $("#draw-style").val()}
     }));
@@ -151,7 +153,7 @@ function stop_draw() {
     if (cur_draw_times == max_draw_times) {
         $(".btn-draw-action").prop("disabled", true);
     }
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: 'stop-drawing',
         content: ""
     }));
@@ -180,15 +182,15 @@ function on_activity_btn_click() {
         $("#cur-item-input").attr("disabled", true); // 禁用输入当前奖项
         if (!started) {
             var t = new Date();
-            var now = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate() + "-" + 
+            var now = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate() + "-" +
             t.getHours() + "-" + t.getMinutes() + "-" + t.getSeconds();
-            ws.send(JSON.stringify({
+            if (connected) ws.send(JSON.stringify({
                 action: 'activity-start-time',
                 content: now
             }));
             started = true;
         }
-        ws.send(JSON.stringify({
+        if (connected) ws.send(JSON.stringify({
             action: 'show-activity',
             content: {
                 cur_item: $cur_item.find("input.item-name").val()
@@ -213,7 +215,7 @@ function on_activity_btn_click() {
         $cur_item.find(".item-prize").addClass("disable");
         $(".btn-activity-action").prop("disabled", true);
         if (drawing) stop_draw();
-        ws.send(JSON.stringify({
+        if (connected) ws.send(JSON.stringify({
             action: 'hide-activity',
             content: ''
         }));
@@ -283,7 +285,7 @@ function import_participants() {
                         record_str += "<td>" + data[i][item] + "</td>";
                         content[item] = data[i][item];
                     }
-                    ws.send(JSON.stringify({
+                    if (connected) ws.send(JSON.stringify({
                         action: 'manual-import',
                         content: content
                     }));
@@ -298,14 +300,14 @@ function import_participants() {
 
 /* import background image begin */
 function getObjectURL(file) {
-    var url = null;   
-    if (window.createObjectURL !== undefined) { // basic  
-        url = window.createObjectURL(file);  
-    } else if (window.URL !== undefined) { // mozilla(firefox)  
-        url = window.URL.createObjectURL(file);  
-    } else if (window.webkitURL !== undefined) { // webkit or chrome  
-        url = window.webkitURL.createObjectURL(file);  
-    }  
+    var url = null;
+    if (window.createObjectURL !== undefined) { // basic
+        url = window.createObjectURL(file);
+    } else if (window.URL !== undefined) { // mozilla(firefox)
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL !== undefined) { // webkit or chrome
+        url = window.webkitURL.createObjectURL(file);
+    }
     return url;
 }
 function converImgTobase64(url, callback, outputFormat) {
@@ -319,7 +321,7 @@ function converImgTobase64(url, callback, outputFormat) {
         ctx.drawImage(img,0,0);
         var dataURL = canvas.toDataURL(outputFormat || 'image/png');
         callback.call(this, dataURL);
-        canvas = null; 
+        canvas = null;
     };
     img.src = url;
 }
@@ -330,7 +332,7 @@ function import_bg_image() {
     // var src = document.getElementById("background-img").files[0];
     console.log("src: ", src);
     converImgTobase64(src, function(base64Str) {
-        $.ajax({ 
+        $.ajax({
             type: "POST",
             url: bg_img_url,
             dataType: "json",
@@ -342,7 +344,7 @@ function import_bg_image() {
             }),
             success: function(result) {
                 console.log("send image: " + result);
-            } 
+            }
         });
     });
     $('.bg-img-label').addClass("active");
@@ -564,7 +566,7 @@ function show_lucky_dog(uid, username, itemname) {
         var username = $user.text();
         var uid = $user.attr("uid");
         var itemname = $tr.find("td.itemname").text();
-        ws.send(JSON.stringify({
+        if (connected) ws.send(JSON.stringify({
             action: "disable-lucky",
             content: {
                 uid: uid,
@@ -688,7 +690,7 @@ function check_cheat_content(obj) {
     }
     var tr = $(obj).parent().parent();
     var obj_index = tr.prevAll().length;
-    
+
     $(tr.parent()).find("tr").each(function(index, element) {
         var input = $(this).children("td:first").find("input").val();
         if (index != obj_index && obj.value == input) {
@@ -778,7 +780,7 @@ function quit_cheat_cfg() {
 /* switch stage page begin */
 function switch_page() {
     $("#page-name").text($(this).text());
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "switch-page",
         content: $("#page-name").text()
     }));
@@ -818,7 +820,7 @@ function update_setting(obj, event) {
         content['danmu-position'] = $("#danmu-position").val();
         console.log("update #danmu-sets");
     }
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "part-update",
         content: content
     }));
@@ -834,9 +836,9 @@ function update_setting(obj, event) {
 /* finish activity function begin */
 function confirm_finish_confirm() {
     var t = new Date();
-    var now = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate() + "-" + 
+    var now = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate() + "-" +
     t.getHours() + "-" + t.getMinutes() + "-" + t.getSeconds();
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: 'activity-end-time',
         content: now
     }));
@@ -853,47 +855,45 @@ function confirm_finish_confirm() {
 }
 function save_configurations() {
     ws.send(JSON.stringify({
-        action: 'pause_activity',
-        content: {
-    {
+
         action: "initialize",
-        "content": {
-        "online": "true",
-            "userType": "vip" ,
-            "url":"",
-            "activity_name": "才明洋表彰大会",
-            "draw_mode_chosen": "固定奖项抽用户",
+        content: {
+        online: "true",
+            userType: "vip" ,
+            url:"",
+            activity_name: "才明洋表彰大会",
+            draw_mode_chosen: "固定奖项抽用户",
 
-            "reward_items_names": ["大电视","大音响"],
-            "prize_names":[["一等奖","大电视",3],["二等奖","大音响",3]],
-            "lottery_style":"swing",
-            "topic_color":"#8A5010",
-            "lottery_music":"haorizi",
-            "win_prize_music":"bingo",
-            "get_prize_music":"laciji",
-            "bullet_font_size":37,
-            "bullet_transparent_degree":4,
-            "bullet_font":"SimHei",
-            "bullet_color":"#996565",
-            "bullet_velocity":"fast",
-            "bullet_location":"mid",
-            "reward_users_list":
+            reward_items_names: ["大电视","大音响"],
+            prize_names:[["一等奖","大电视",3],["二等奖","大音响",3]],
+            lottery_style:"swing",
+            topic_color:"#8A5010",
+            lottery_music:"haorizi",
+            win_prize_music:"bingo",
+            get_prize_music:"laciji",
+            bullet_font_size:37,
+            bullet_transparent_degree:4,
+            bullet_font:"SimHei",
+            bullet_color:"#996565",
+            bullet_velocity:"fast",
+            bullet_location:"mid",
+            reward_users_list:
         [{
-            "uid":"江小白",
-            "nickname":"钢链手指",
-            "itemname":"大电视"
+            uid:"江小白",
+            nickname:"钢链手指",
+            itemname:"大电视"
         },
-            {"uid":"李航",
-                "nickname":"黄金体验",
-                "itemname":"大音响"}],
-            "reward_remain":[3,2],
-            "danmu_switch":"on",
-            "danmu_check_switch":"on"
+            {uid:"李航",
+                nickname:"黄金体验",
+                itemname:"大音响"
+            }],
+            reward_remain:[3,2],
+            danmu_switch:"on",
+            danmu_check_switch:"on"
 
-    }
-    }
+             }
 
-        }
+
     }));
 
 
@@ -910,14 +910,14 @@ function finish_activity() {
 
 /* danmu switch function begin */
 function danmu_switch(event, state) {
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "danmu-switch",
         content: state
     }));
     console.log("danmu switch: ", state);
 }
 function danmu_check_switch(event, state) {
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "danmu-check-switch",
         content: state
     }));
@@ -925,14 +925,14 @@ function danmu_check_switch(event, state) {
 }
 /* danmu switch function end */
 
+/// 小工具
+String.prototype.format = function() {
+    var args = Array.prototype.slice.call(arguments);
+    var count = 0;
+    return this.replace(/%s/g, function(s, i){
+        return args[count ++];
+    });
 
-///小工具
-String.prototype.format = function() {
-    var args = Array.prototype.slice.call(arguments);
-    var count = 0;
-    return this.replace(/%s/g, function(s, i){
-        return args[count ++];
-    });
 }
 
 /// chosen插件的选择功能
@@ -945,6 +945,29 @@ jQuery.fn.choose = function (option) {
     if (chosen_index == -1) return;
     $(("#%s a.chosen-single").format(chosen_id)).mousedown();
     $(("#%s li[data-option-array-index=%s]").format(chosen_id, chosen_index)).mouseup();
+}
+
+
+/// Range Input设置值
+jQuery.fn.scrollTo = function (value) {
+    $(this).val(value);
+    $(this).trigger('input');
+}
+
+/// switch 开关
+jQuery.fn.turn = function (state) {
+    console.log("turn " + state);
+    var new_state = state == "on";
+    var cur_state = $(this).bootstrapSwitch("state");
+    if ((new_state && !cur_state) || (!new_state && cur_state)) {
+        $(this).bootstrapSwitch("toggleState");
+    }
+}
+
+/// minicolor
+jQuery.fn.setColor = function (color) {
+    $(this).val(color);
+    $(this).trigger('keyup');
 }
 
 
@@ -1019,14 +1042,14 @@ var path=getQueryString('path');
 // }
 // f.close();
 function save_as_history(){///保存为历史设置
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "save_as_history",
         content: ""
     }));
 }
 
 function pause() {///临时暂停活动
-    ws.send(JSON.stringify({
+    if (connected) ws.send(JSON.stringify({
         action: "pause_this_activity",
         content: ""
     }));
@@ -1062,6 +1085,7 @@ function save_information_as_history(){///保存活动信息
 
 /* initialization and bindings */
 $(document).ready(function () {
+
     /* disable browser backward */
     // history.pushState(null, null, document.URL);
     // window.addEventListener('popstate', function () {
@@ -1070,7 +1094,7 @@ $(document).ready(function () {
 
     /* Import participants binding */
     $("#participants").change(import_participants);
-    
+
     /* Date input binding */
     // $("#start-time").ECalendar(eCalendar);
     // $("#end-time").ECalendar(eCalendar);
@@ -1121,7 +1145,14 @@ $(document).ready(function () {
     $("#cur-item-input").attr("onkeydown", "input_keydown(this, event)");
 
     ws = new WebSocket('ws://127.0.0.1:1923/ws');
+
     ws.onmessage = recv_ws_message;
+
+    if (!$.isEmptyObject(ws) && ws.readyState == 1) {
+        connected = true;
+        ws.onmessage = recv_ws_message;
+    }
+
 });
 
 String.prototype.format = function() {
