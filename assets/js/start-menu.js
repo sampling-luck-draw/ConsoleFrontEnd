@@ -47,7 +47,7 @@ if(tem==1){
     })
     // innerText='新建活动';
     for(var i=0;i<history_number;i++){
-        var href_str="http://localhost:63342/ConsoleFrontEnd/console.html?set-from-history="+history_id[i];
+        var href_str="http://localhost:63342/ConsoleFrontEnd/console.jsp?set-from-history="+history_id[i];
         var div=document.createElement('div');
         var a=document.createElement('a');
         a.innerText=history_name[i];

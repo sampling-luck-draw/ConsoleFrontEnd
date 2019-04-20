@@ -14,11 +14,12 @@ let cheat_data = new Array();
 /* global variable end */
 
 /** WebSocket initialization begin */
-let ws = new WebSocket('ws://127.0.0.1:1923/ws');
+let ws = new Object();
 
-ws.onmessage = function (message) {
+function recv_ws_message(message) {
     console.log(message.data);
     let msg = JSON.parse(message.data);
+    console.log(msg.action);
     switch (msg.action) {
         case 'append-user':
             let username = msg.content.nickname;
@@ -40,50 +41,48 @@ ws.onmessage = function (message) {
             /*init*/
             $('#bg-img').val(msg.content.url);
             /*基本信息*/
-            $('#activity-name').val(msg.content.activity-name);
+            $('#activity-name').val(msg.content.activity_name);
             /*奖池设置*/
             $('#draw_mode_chosen').val(msg.content.draw_mode_chosen)
-            for(var i=0;i<msg.content.reward-items-names.length;i++){
-                $("#prize-list-body").append(`<tr>
-                    <td><input id='tem' class="table-input" style="margin-bottom: 0px;" type="text" draggable="true" ondragstart="drag_prize(event)" onblur="check_content(this)"></input></td>
-                    <td class="icon-td"><div class="del-prize table-icon" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
-                    </tr>`);
-                $(".table-input").attr("onkeydown", "input_keydown(this, event)");
-                $('#tem').attr("value",msg.content.rewa-itims-names[i]);
+            for(var i=0;i<msg.content.reward_items_names.length;i++){
+                add_prize1(msg.content.reward_items_names[i]);
             }
-            for(var i=0;i<msg.content.prize-names.length;i++){$("#item-list-body").append(`<tr>
-            <td><input id="tem1" class="table-input item-name" type="text" onblur="check_content(this)"></input></td>
-            <td><input id="tem2" class="item-prize" readonly="readonly" ondrop="drop_prize(event)" ondragover="allowDrop(event)"></input></td>
-            <td><input id="tem3" "class="table-input max_winner" type="number" min="1" value="1"></input></td>
-            <td class="icon-td">
-            ` + cheat_functions + `
-            <div class="del-item table-icon" onclick="del_item(this)"><i class="mdi mdi-trash-can-outline"></i></div>
-            </td>
-            </tr>`);
-                $('#tem1').attr("value",msg.content.prize-names[i][0]);
-                $('#tem2').attr("value",msg.content.prize-names[i][1]);
-                $('#tem3').attr("value",msg.content.prize-names[i][2]);
+
+            for(var i=0;i<msg.content.prize_names.length;i++){
+                add_item1(msg.content.prize_names[i][0],msg.content.prize_names[i][1],msg.content.prize_names[i][2]);
             }
             /*方式主题*/
-            $('#draw_style_chosen').val(msg.content.lottery-style);
-            $('#show_style').attr(value,msg.content.topic-color);
-            $('#draw_music_chosen').val(msg.content.lottery-music);
-            $('#lucky_music_chosen').val(msg.content.win-prize-music);
-            $('#reward_music_chosen').val(msg.content.get-prize-music);
 
+           // $('#show_style').attr("value",msg.content.topic_color);
+            $("#show-style").setColor(msg.content.topic_color);
+
+            $("#draw-style option[value=" +msg.content.lottery_style +"]").attr("selected","selected");
+            $("#draw-music option[value=" +msg.content.lottery_music +"]").attr("selected","selected");
+            $("#lucky-music option[value=" +msg.content.win_prize_music +"]").attr("selected","selected");
+            $("#reward-music option[value=" +msg.content.get_prize_music +"]").attr("selected","selected");
+            $("#show-style option[value=" +msg.content.topic_color +"]").attr("selected","selected");
             /*弹幕设置*/
-            $('#font-size').val(msg.content.bullet-font-size);
-            $('#opacity').val(msg.content.bullet-transparent-degree);
-            $('#chosen-single').val(msg.content.bullet-font);
-            $('#font-color').val(msg.content.bullet-color);
-            $('#danmu_speed_chosen').val(msg.content.bullet-velocity);
-            $('#danmu_position_chosen').val(msg.content.bullet-location);
-            $('#danmu-switch').val(msg.content.bullet-enable);
-            $('#danmu-check-switch').val(msg.content.bullet-check-enable);
+            // $('#font-size').val(msg.content.bullet_font_size);
+            $('#font-size').scrollTo(msg.content.bullet_font_size);
+            // $('#opacity').val(msg.content.bullet_transparent_degree);
+            $('#opacity').scrollTo(msg.content.bullet_transparent_degree);
+
+            // $('#font-color').val(msg.content.bullet_color);
+            $('#font-color').setColor(msg.content.bullet_color);
+
+            $('#danmu-switch').turn(msg.content.danmu_switch);
+            $('#danmu-check-switch').turn(msg.content.danmu_check_switch);
+
+
+            $("#font-family option[value=" +msg.content.bullet_font +"]").attr("selected","selected");
+            $("#danmu-speed option[value=" +msg.content.bullet_velocity +"]").attr("selected","selected");
+            $("#danmu-position option[value=" +msg.content.bullet_location +"]").attr("selected","selected");
+            $('.form-control-chosen').chosen();
+
 
             /*抽奖状态*/
-            for(var i=0;i<msg.content.reward-users-list.length;i++)
-            show_lucky_dog(msg.content.reward-users-list[i].uid, msg.content.reward-users-list[i].nickname, msg.content.reward-users-list[i].itemname);
+            for(var i=0;i<msg.content.reward_users_list.length;i++)
+            show_lucky_dog(msg.content.reward_users_list[i].uid, msg.content.reward_users_list[i].nickname, msg.content.reward_users_list[i].itemname);
             ///TODO:剩余抽奖次数逻辑没写
 
             break;
@@ -853,9 +852,49 @@ function confirm_finish_confirm() {
     }
 }
 function save_configurations() {
+    ws.send(JSON.stringify({
+        action: 'pause_activity',
+        content: {
+    {
+        action: "initialize",
+        "content": {
+        "online": "true",
+            "userType": "vip" ,
+            "url":"",
+            "activity_name": "才明洋表彰大会",
+            "draw_mode_chosen": "固定奖项抽用户",
 
+            "reward_items_names": ["大电视","大音响"],
+            "prize_names":[["一等奖","大电视",3],["二等奖","大音响",3]],
+            "lottery_style":"swing",
+            "topic_color":"#8A5010",
+            "lottery_music":"haorizi",
+            "win_prize_music":"bingo",
+            "get_prize_music":"laciji",
+            "bullet_font_size":37,
+            "bullet_transparent_degree":4,
+            "bullet_font":"SimHei",
+            "bullet_color":"#996565",
+            "bullet_velocity":"fast",
+            "bullet_location":"mid",
+            "reward_users_list":
+        [{
+            "uid":"江小白",
+            "nickname":"钢链手指",
+            "itemname":"大电视"
+        },
+            {"uid":"李航",
+                "nickname":"黄金体验",
+                "itemname":"大音响"}],
+            "reward_remain":[3,2],
+            "danmu_switch":"on",
+            "danmu_check_switch":"on"
 
-    // TODO
+    }
+    }
+
+        }
+    }));
 
 
 
@@ -886,6 +925,29 @@ function danmu_check_switch(event, state) {
 }
 /* danmu switch function end */
 
+
+///小工具
+String.prototype.format = function() {
+    var args = Array.prototype.slice.call(arguments);
+    var count = 0;
+    return this.replace(/%s/g, function(s, i){
+        return args[count ++];
+    });
+}
+
+/// chosen插件的选择功能
+jQuery.fn.choose = function (option) {
+    var chosen_id = $(this).attr("id").replace('-', '_') + "_chosen";
+    var chosen_index = -1;
+    $(this).find("option").each(function(index, element) {
+        if ($(element).val() == option) chosen_index = index;
+    });
+    if (chosen_index == -1) return;
+    $(("#%s a.chosen-single").format(chosen_id)).mousedown();
+    $(("#%s li[data-option-array-index=%s]").format(chosen_id, chosen_index)).mouseup();
+}
+
+
 /* shotcut key functions begin */
 function global_keydown(e) { // global
 
@@ -902,6 +964,43 @@ function input_keydown(obj, event) { // input
 //-------------------------------bjz-begin---------------------------------
 //-------------------------------bjz-begin---------------------------------
 //-------------------------------bjz-begin---------------------------------
+
+function add_item1(a,b,c) {
+    if ($('input:focus').length != 0) return;
+    if ($('#item-list-body').find("tr").length == 0 || $('#item-list-body tr:last').find('input.item-name').val()) {
+        var cheat_functions = `<div class="cfg-cheat table-icon" onclick="cfg_cheat(this)"><i class="mdi mdi-settings"></i></div>`
+        if (userType == "normal") cheat_functions = '';
+        $("#item-list-body").append(`<tr>
+            <td><input class="table-input item-name" type="text" onblur="check_content(this)"></input></td>
+            <td><input class="item-prize" readonly="readonly" ondrop="drop_prize(event)" ondragover="allowDrop(event)"></input></td>
+            <td><input class="table-input max_winner" type="number" min="1" value="1"></input></td>
+            <td class="icon-td">
+            ` + cheat_functions + `
+            <div class="del-item table-icon" onclick="del_item(this)"><i class="mdi mdi-trash-can-outline"></i></div>
+            </td>
+            </tr>`);
+        $(".table-input").attr("onkeydown", "input_keydown(this, event)");
+        $(".cfg-cheat").attr("onmouseover", "show_cheat_info(this, event)");
+        $(".cfg-cheat").attr("onmouseout", "hide_cheat_info(this, event)");
+        $(".max_winner").attr("onchange", "update_max_draw_times(this, event)");
+    }
+    $('#item-list-body tr:last').find('input.item-name').val(a);
+    $('#item-list-body tr:last').find('input.item-prize').val(b);
+    $('#item-list-body tr:last').find('input.max_winner').val(c);
+
+}
+
+function add_prize1(str) {
+    if ($('input:focus').length != 0) return;
+    if ($('#prize-list-body').find("tr").length == 0 || $('#prize-list-body tr:last').find('input').val()) {
+        $("#prize-list-body").append(`<tr>
+            <td><input class="table-input" style="margin-bottom: 0px;" type="text" draggable="true" ondragstart="drag_prize(event)" onblur="check_content(this)"></input></td>
+            <td class="icon-td"><div class="del-prize table-icon" onclick="del_row(this)"><i class="mdi mdi-trash-can-outline"></i></div></td>
+            </tr>`);
+        $(".table-input").attr("onkeydown", "input_keydown(this, event)");
+    }
+    $('#prize-list-body tr:last').find('input').val(str);
+}
 
 function getQueryString(name) {//获取name参数的值
     var result = window.location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
@@ -982,7 +1081,6 @@ $(document).ready(function () {
     });
 
     /* select input plugin initialization */
-    $('.form-control-chosen').chosen();
 
     /* add prize binding */
     $(".btn-add-prize").click(add_prize);
@@ -1021,4 +1119,37 @@ $(document).ready(function () {
     /* shotcut key map */
     document.onkeydown = global_keydown;
     $("#cur-item-input").attr("onkeydown", "input_keydown(this, event)");
+
+    ws = new WebSocket('ws://127.0.0.1:1923/ws');
+    ws.onmessage = recv_ws_message;
 });
+
+String.prototype.format = function() {
+    var args = Array.prototype.slice.call(arguments);
+    var count = 0;
+    return this.replace(/%s/g, function(s, i){
+        return args[count ++];
+    });
+}
+/// minicolor
+jQuery.fn.setColor = function (color) {
+    $(this).val(color);
+    $(this).trigger('keyup');
+}
+
+
+/// Range Input设置值
+jQuery.fn.scrollTo = function (value) {
+    $(this).val(value);
+    $(this).trigger('input');
+}
+
+/// switch 开关
+jQuery.fn.turn = function (state) {
+    console.log("turn " + state);
+    var new_state = state == "on";
+    var cur_state = $(this).bootstrapSwitch("state");
+    if ((new_state && !cur_state) || (!new_state && cur_state)) {
+        $(this).bootstrapSwitch("toggleState");
+    }
+}

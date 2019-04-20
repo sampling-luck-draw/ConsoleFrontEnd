@@ -52,7 +52,7 @@
                                 <textarea class="scrollbar" type="text" spellcheck="false" id="validationTooltip03"></textarea>
                             </div>
                             <div class="col-md-12" style="margin-top: 10px;">
-                                <button type="submit" class="btn btn-primary right">创建活动</button>
+                                <button type="submit" class="btn btn-primary right" onclick="creat_from_blank()">创建活动</button>
                             </div>
                         </div>
                     </form>
@@ -63,14 +63,23 @@
                     </div>
                 </div>
                 <div class="col-md-6 panel-right">
-                    <form id="history-form" method="post" action="console.html" style="display: none;">
+                    <form id="history-form" method="post" action="console.jsp" style="display: none;">
                         <div class="row">
                             <div class="col-md-12">
                                 <h2>导入历史设置</h2>
                             </div>
                             <div class="col-md-12">
                                 <div class="list-group scrollbar" id="history-list" style="margin-top: 1rem;
-                                height: calc(100% - 100px);"></div>
+                                height: calc(100% - 100px);">
+
+                                    <a history_id="qwerasdf0" class="list-group-item list-group-item-action" onclick="creat_from_history(this)">才明洋表彰大会</a>
+                                    <a history_id="qwerasdf1" class="list-group-item list-group-item-action" onclick="creat_from_history(this)">才明洋表彰大会</a>
+                                    <a history_id="qwerasdf2" class="list-group-item list-group-item-action" onclick="creat_from_history(this)">才明洋表彰大会</a>
+                                    <a history_id="qwerasdf3" class="list-group-item list-group-item-action" onclick="creat_from_history(this)">才明洋表彰大会</a>
+                                    <a history_id="qwerasdf4" class="list-group-item list-group-item-action" onclick="creat_from_history(this)">才明洋表彰大会</a>
+
+
+                                </div>
                             </div>
                         </div>
                     </form>

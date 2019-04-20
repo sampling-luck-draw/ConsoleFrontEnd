@@ -40,27 +40,7 @@ history_id[2]='002';
 history_id[3]='003';
 history_id[4]='004';
 
-let data =  {
-};
-$.ajax({
-    url: '127.0.0.1:1923/get-activities',//老才的服务器名
-    method: 'get',
-    contentType: 'json',
-    dataType: 'json',
-    data: JSON.stringify(data),
-    success: function(e) {
-        history_number=e.content.length;
-        for(var i=0;i<e.content.length;i++){
-            history_id[i]=content[i].id;
-            history_name[i]=content[i].name;
-        }
-        console.log('获取历史记录成功');
-    },
-    error: function (e) {
-        console.log(e);
-        console.log('获取历史记录失败');
-    }
-})
+
 
 history_number=5;
 var tem=1;
@@ -69,18 +49,58 @@ if(tem==1) {
         $("#resume").css('display', 'none');
         $("#create-or-history").css('display', 'block');
     });
-    for(var i=0;i<history_number;i++) {
-        var href_str="http://localhost:63342/ConsoleFrontEnd-master/console.html?set-from-history="+history_id[i];
-        var a=document.createElement('a');
-        a.innerText=history_name[i];
-        a.href=href_str;
-        a.className = "list-group-item list-group-item-action";
-        $('#history-list').append(a);
-    }
+
 }
 else if(tem==2) {
     $(function() {
         $("#resume").css('display', 'block');
         $("#create-or-history").css('display', 'none');
     });
+}
+
+function creat_from_history(e) {
+    let data =  {
+        "action":"creat_from_history",
+        "content":{
+            "history_id":e.history_id
+        }
+    };
+    $.ajax({
+        url: '127.0.0.1:1923/get-activities',//老才的服务器名
+        method: 'post',
+        contentType: 'json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        // success: function(e) {
+        //     history_number=e.content.length;
+        //     for(var i=0;i<e.content.length;i++){
+        //         history_id[i]=content[i].id;
+        //         history_name[i]=content[i].name;
+        //     }
+        //     console.log('获取历史记录成功');
+        // },
+        // error: function (e) {
+        //     console.log(e);
+        //     console.log('获取历史记录失败');
+        // }
+    })
+}
+
+function creat_from_blank() {
+    let data =  {
+        "action":"creat_from_blank",
+        "content":{
+            "activity_name":$('#input-activity-name').val,
+            "max-population":$('#max-population').val,
+            "remark":$('#validationTooltip03').val
+        }
+    };
+    $.ajax({
+        url: '127.0.0.1:1923/get-activities',//老才的服务器名
+        method: 'post',
+        contentType: 'json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+    })
+
 }
