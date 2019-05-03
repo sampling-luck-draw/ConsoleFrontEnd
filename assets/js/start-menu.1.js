@@ -43,7 +43,7 @@ history_id[4]='004';
 
 
 history_number=5;
-var tem=1;
+var tem=2;
 if(tem==1) {
     $(function() {
         $("#resume").css('display', 'none');
@@ -102,5 +102,20 @@ function creat_from_blank() {
         dataType: 'json',
         data: JSON.stringify(data),
     })
+
+}
+function resume_activity() {
+    let data =  {
+        "action":"resume_activity",
+        "content":""
+    };
+    $.ajax({
+        url: '127.0.0.1:1923/get-activities',//老才的服务器名
+        method: 'post',
+        contentType: 'json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+    })
+    window.location.href="console.html";
 
 }
