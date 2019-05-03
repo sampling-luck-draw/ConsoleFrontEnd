@@ -3,18 +3,23 @@ html {
 }
 body {
     height: 100%;
-    background-color: #5F9EA0;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    background-color: cadetblue;
+    color: rgb(64, 77, 91);
 }
 .row {
     margin-left: 0;
     margin-right: 0;
+    height: 100%;
 }
 .panel {
     border: none;
     border-radius: 0;
     margin-top: 100px;
     margin-bottom: 100px;
-    height: calc(100% - 260px);
+    height: calc(100% - 200px);
     padding-left: 0;
     padding-right: 0;
 }
@@ -69,7 +74,7 @@ body {
 .input-field textarea {
     margin-top: 10px;
     width: 100%;
-    height: calc(100% - 250px);
+    height: 100%;
     outline: none;
     resize: none;
 }
@@ -90,6 +95,7 @@ body {
 }
 .panel-left, .panel-right {
     padding: 0;
+    height: 100%;
 }
 .panel-right h2, .panel-left h2 {
     font-family: Montserrat, sans-serif;
@@ -106,10 +112,6 @@ body {
     padding: 12px 45px;
     letter-spacing: 1px;
     text-transform: uppercase;
-}
-.right {
-    position: absolute;
-    right: 15;
 }
 .btn-primary:hover {
     background-color: #00cfd6;
@@ -133,15 +135,19 @@ body {
     box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     background: #EDEDED;
 }
+.textarea-field {
+    height: calc(100% - 250px);
+}
 @media (max-width: 768px) {
     .panel {
         margin-top: 0;
+        height: 100%;
     }
     .panel-left, .panel-right {
         height: 100%;
         background-color: white;
     }
-    .input-field textarea {
+    .textarea-field {
         height: calc(100% - 310px);
     }
 }

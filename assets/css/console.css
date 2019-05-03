@@ -14,6 +14,7 @@ body {
 }
 [class*="col-"] {
     padding-left: 0px;
+    height: 100%;
 }
 #online-symbol {
     color: wheat;

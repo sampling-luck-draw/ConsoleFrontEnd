@@ -38,6 +38,7 @@ body {
 }
 .card {
     border-radius: 0;
+    height: 100%;
 }
 .table-header {
     margin-bottom: 0px;
@@ -107,3 +108,9 @@ tr.active td {
 .bullet-userid   {width: 20%;}
 .bullet-nickname {width: 20%;}
 .bullet-content  {width: 50%;}
+
+@media (max-width: 768px) {
+    .right-card {
+        height: auto;
+    }
+}

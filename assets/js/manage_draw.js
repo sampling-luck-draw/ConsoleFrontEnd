@@ -1,7 +1,7 @@
 var forbidden_words_list=new Array("优秀","太强了","天下第一");
 var forbidden_times=new Array(0,0,0);
 var black_users_list=new Array("李金牙","李金嘴","黄一凡");
-var user_map = new Object();
+var user_map = new Array();
 let $cur_line = new Object();
 var bullet_num=0;
 let cursor_used = false;
@@ -24,7 +24,8 @@ ws.onmessage = function (message) {
                 }
             }
             if (!forbidden) {
-                user_map[msg.uid] = msg.user_nickname;
+                user_map[msg.content.uid] = msg.content.nickname;
+                console.log(user_map);
                 add_bullet(
                     msg.content.time,
                     msg.content.uid,

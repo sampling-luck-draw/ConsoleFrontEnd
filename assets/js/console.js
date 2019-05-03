@@ -79,7 +79,6 @@ function recv_ws_message(message) {
             $("#font-family option[value=" +msg.content.bullet_font +"]").attr("selected","selected");
             $("#danmu-speed option[value=" +msg.content.bullet_velocity +"]").attr("selected","selected");
             $("#danmu-position option[value=" +msg.content.bullet_location +"]").attr("selected","selected");
-            $('.form-control-chosen').chosen();
 
 
             /*抽奖状态*/
@@ -1134,6 +1133,9 @@ $(document).ready(function () {
 
     /* import background image binding */
     $("#background-img").change(import_bg_image);
+
+    /* chosen plugin initialization */
+    $('.form-control-chosen').chosen();
 
     /* swich initialization */
     $("[name='switch']").bootstrapSwitch();
